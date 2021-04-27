@@ -1,6 +1,7 @@
 package equipment;
 
 import utilities.Date;
+import utilities.LoggingCSV;
 
 import java.time.YearMonth;
 
@@ -16,6 +17,7 @@ public class Consumable extends Equipment {
 
     @Override
     public double calculateInvestmentOnMonth(int year, int month) {
+        LoggingCSV.log("Calculating investment on month on Consumables");
         double price = this.getPrice();
         YearMonth yearMonth = YearMonth.of(year, month);
         int daysInMonth = yearMonth.lengthOfMonth();

@@ -1,6 +1,7 @@
 package employees;
 
 import utilities.Date;
+import utilities.LoggingCSV;
 
 public class Nurse extends Employee {
 
@@ -22,6 +23,7 @@ public class Nurse extends Employee {
 
     @Override
     public double calculateSalary() {
+        LoggingCSV.log("Calculating the salary of " + this.firstName + " " + this.lastName);
         double salary = this.getDaysWorked() * costPerHour * hoursPerDay;
         double bonus = salary * (5 + experience) / 100;
         salary += bonus;

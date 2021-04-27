@@ -1,6 +1,7 @@
 package clinic;
 
 import employees.Employee;
+import utilities.LoggingCSV;
 
 public class Administrator extends Employee {
 
@@ -18,6 +19,7 @@ public class Administrator extends Employee {
 
     @Override
     public double calculateSalary() {
+        LoggingCSV.log("Calculating salary for administrator");
         double salary = this.getDaysWorked() * costPerHour * hoursPerDay;
         double bonus = salary * (5 + experience) / 100;
         salary += bonus;
@@ -42,5 +44,5 @@ public class Administrator extends Employee {
             return firstName + " " + lastName;  
         }
     }
-}
 
+}

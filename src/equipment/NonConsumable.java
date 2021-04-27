@@ -1,6 +1,7 @@
 package equipment;
 
 import utilities.Date;
+import utilities.LoggingCSV;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ public class NonConsumable extends Equipment {
 
     @Override
     public double calculateInvestmentOnMonth(int year, int month) {
+        LoggingCSV.log("Calculating investment on month on Nonconsumables");
         double price = this.getPrice();
         Date buyDate = this.getBuyDate();
         LocalDate today = LocalDate.now();

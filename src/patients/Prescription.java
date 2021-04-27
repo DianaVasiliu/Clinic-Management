@@ -17,6 +17,8 @@ public class Prescription {
         this.prescriptionDate = new Date(prescriptionDate);
     }
 
+    /* setters & getters */
+
     public void setMedicines(ArrayList<Medicine> medicines) {
         this.medicines = new ArrayList<>(medicines);
     }

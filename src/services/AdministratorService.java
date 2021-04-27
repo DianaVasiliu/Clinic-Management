@@ -11,6 +11,7 @@ import patients.Appointment;
 import patients.Medicine;
 import patients.Patient;
 import utilities.Errors;
+import utilities.LoggingCSV;
 import utilities.Months;
 
 import java.time.LocalDate;
@@ -31,6 +32,7 @@ public class AdministratorService extends EmployeesService {
     }
 
     public void addEmployee(Employee employee) {
+        LoggingCSV.log("Adding new employee");
         Clinic clinic = Clinic.getInstance();
         if (employee instanceof Doctor) {
             clinic.getDoctors().add((Doctor) employee);
@@ -53,12 +55,14 @@ public class AdministratorService extends EmployeesService {
     }
 
     public void addMedicine(Medicine medicine) {
+        LoggingCSV.log("Adding new medicine");
         Clinic clinic = Clinic.getInstance();
         clinic.getMedicines().add(medicine);
     }
 
     public void addEquipment(Equipment equipment) {
         if (equipment != null) {
+            LoggingCSV.log("Adding new equipment");
             Clinic clinic = Clinic.getInstance();
             clinic.getEquipment().add(equipment);
         }
@@ -82,6 +86,8 @@ public class AdministratorService extends EmployeesService {
             percentage = percentage / 100;
         }
 
+        LoggingCSV.log("Raising salary by " + percentage*100 + "%");
+
         for (Employee employee : employees) {
             double salary = employee.getSalary();
             salary += salary * percentage;
@@ -91,6 +97,7 @@ public class AdministratorService extends EmployeesService {
     }
 
     public void paySalaries() {
+        LoggingCSV.log("Paying salaries");
         Clinic clinic = Clinic.getInstance();
         ArrayList<Employee> employees = new ArrayList<>();
         employees.addAll(clinic.getDoctors());
@@ -117,6 +124,7 @@ public class AdministratorService extends EmployeesService {
 
     public double getTotalSpentOnMonth(int month, int year) {
         if (month >= 1 && month <= 12) {
+            LoggingCSV.log("Calculating total spent on month");
             double total = 0.0;
             Clinic clinic = Clinic.getInstance();
             ArrayList<Equipment> equipment = clinic.getEquipment();
@@ -131,7 +139,7 @@ public class AdministratorService extends EmployeesService {
         }
         else {
             System.err.println(Errors.INVALID_MONTH);
-            return 0.0;
+            return -1.0;
         }
     }
 
@@ -139,16 +147,22 @@ public class AdministratorService extends EmployeesService {
         try {
             month = month.toUpperCase();
             int number = Months.getNumber(Months.valueOf(month));
-            return getTotalSpentOnMonth(number, year);
+            double total = getTotalSpentOnMonth(number, year);
+
+            if (total == -1) {
+                throw new Exception();
+            }
+            return total;
         }
         catch (Exception e) {
             System.err.println(Errors.INVALID_MONTH);
-            return 0;
+            return -1.0;
         }
     }
 
     public int getNumberOfPatientsOnMonth(int month, int year) {
         if (month >= 1 && month <= 12) {
+            LoggingCSV.log("Calculating total number of patients on month");
             int number = 0;
             Clinic clinic = Clinic.getInstance();
             ArrayList<Patient> patients = clinic.getPatients();
@@ -167,7 +181,7 @@ public class AdministratorService extends EmployeesService {
         }
         else {
             System.err.println(Errors.INVALID_MONTH);
-            return 0;
+            return -1;
         }
     }
 
@@ -175,16 +189,22 @@ public class AdministratorService extends EmployeesService {
         try {
             month = month.toUpperCase();
             int number = Months.getNumber(Months.valueOf(month));
-            return getNumberOfPatientsOnMonth(number, year);
+            int total = getNumberOfPatientsOnMonth(number, year);
+
+            if (total == -1) {
+                throw new Exception();
+            }
+            return total;
         }
         catch (Exception e) {
             System.err.println(Errors.INVALID_MONTH);
-            return 0;
+            return -1;
         }
     }
 
     public HashMap<String, Integer> getNumberOfPatientsOnMonthOnSpec(int month, int year) {
         if (month >= 1 && month <= 12) {
+            LoggingCSV.log("Calculating total number of patients on month at a specialization");
             HashMap<String, Integer> patientsPerSpec = new HashMap<>();
             Clinic clinic = Clinic.getInstance();
             ArrayList<Patient> patients = clinic.getPatients();
@@ -209,7 +229,9 @@ public class AdministratorService extends EmployeesService {
         }
         else {
             System.err.println(Errors.INVALID_MONTH);
-            return new HashMap<>();
+            HashMap<String, Integer> hashmap = new HashMap<>();
+            hashmap.put("Invalid month", 0);
+            return hashmap;
         }
     }
 
@@ -217,7 +239,12 @@ public class AdministratorService extends EmployeesService {
         try {
             month = month.toUpperCase();
             int number = Months.getNumber(Months.valueOf(month));
-            return getNumberOfPatientsOnMonthOnSpec(number, year);
+            HashMap<String, Integer> patients = getNumberOfPatientsOnMonthOnSpec(number, year);
+
+            if (patients.containsKey("Invalid month")) {
+                throw new Exception();
+            }
+            return patients;
         }
         catch (Exception e) {
             System.err.println(Errors.INVALID_MONTH);
@@ -227,6 +254,7 @@ public class AdministratorService extends EmployeesService {
 
     public double getTotalEarningsOnMonth(int month, int year) {
         if (month >= 1 && month <= 12) {
+            LoggingCSV.log("Calculating total earnings on month");
             HashMap<String, Integer> pacientsPerSpec = getNumberOfPatientsOnMonthOnSpec(month, year);
             double total = 0;
 
@@ -240,7 +268,7 @@ public class AdministratorService extends EmployeesService {
         }
         else {
             System.err.println(Errors.INVALID_MONTH);
-            return 0;
+            return -1.0;
         }
     }
 
@@ -248,23 +276,33 @@ public class AdministratorService extends EmployeesService {
         try {
             month = month.toUpperCase();
             int number = Months.getNumber(Months.valueOf(month));
-            return getTotalEarningsOnMonth(number, year);
+            double total = getTotalEarningsOnMonth(number, year);
+
+            if (total == -1.0) {
+                throw new Exception();
+            }
+            return total;
         }
         catch (Exception e) {
             System.err.println(Errors.INVALID_MONTH);
-            return 0;
+            return -1;
         }
     }
 
     public double getProfitOnMonth(int month, int year) {
         if (month >= 1 && month <= 12) {
+            LoggingCSV.log("Calculating the profit on month");
             double spent = getTotalSpentOnMonth(month, year);
             double earned = getTotalEarningsOnMonth(month, year);
+
+            if (spent < 0 || earned < 0) {
+                return -1;
+            }
             return earned - spent;
         }
         else {
             System.err.println(Errors.INVALID_MONTH);
-            return 0;
+            return -1;
         }
     }
 
@@ -272,23 +310,33 @@ public class AdministratorService extends EmployeesService {
         try {
             month = month.toUpperCase();
             int number = Months.getNumber(Months.valueOf(month));
-            return getProfitOnMonth(number, year);
+            double profit = getProfitOnMonth(number, year);
+
+            if (profit < 0) {
+                throw new Exception();
+            }
+            return profit;
         }
         catch (Exception e) {
             System.err.println(Errors.INVALID_MONTH);
-            return 0;
+            return -1;
         }
     }
 
     public double getAverageProfitOnPatientOnMonth(int month, int year) {
         if (month >= 1 && month <= 12) {
+            LoggingCSV.log("Calculating the average profit on patient on month");
             double profit = getProfitOnMonth(month, year);
             int noOfPatients = getNumberOfPatientsOnMonth(month, year);
+
+            if (profit < 0 || noOfPatients <= 0) {
+                return -1;
+            }
             return profit / noOfPatients;
         }
         else {
             System.err.println(Errors.INVALID_MONTH);
-            return 0;
+            return -1;
         }
     }
 
@@ -296,11 +344,16 @@ public class AdministratorService extends EmployeesService {
         try {
             month = month.toUpperCase();
             int number = Months.getNumber(Months.valueOf(month));
-            return getAverageProfitOnPatientOnMonth(number, year);
+            double average = getAverageProfitOnPatientOnMonth(number, year);
+
+            if (average < 0) {
+                throw new Exception();
+            }
+            return average;
         }
         catch (Exception e) {
             System.err.println(Errors.INVALID_MONTH);
-            return 0;
+            return -1;
         }
     }
 

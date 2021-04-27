@@ -11,12 +11,14 @@ import patients.Patient;
 import patients.Prescription;
 import patients.utils.cmpPrescriptionDate;
 import utilities.Errors;
+import utilities.LoggingCSV;
 
 import java.util.ArrayList;
 
 public class CommonService {
 
     public void showDoctors() {
+        LoggingCSV.log("Showing all doctors");
         Clinic clinic = Clinic.getInstance();
         ArrayList<Doctor> doctors = clinic.getDoctors();
         for (Doctor doctor : doctors) {
@@ -25,6 +27,7 @@ public class CommonService {
     }
 
     public void showNurses() {
+        LoggingCSV.log("Showing all nurses");
         Clinic clinic = Clinic.getInstance();
         ArrayList<Nurse> nurses = clinic.getNurses();
         for (Nurse nurse : nurses) {
@@ -33,6 +36,7 @@ public class CommonService {
     }
 
     public void showReceptionists() {
+        LoggingCSV.log("Showing all receptionists");
         Clinic clinic = Clinic.getInstance();
         ArrayList<Receptionist> receptionists = clinic.getReceptionists();
         for (Receptionist receptionist : receptionists) {
@@ -42,6 +46,7 @@ public class CommonService {
 
     public void showDoctorsBySpecialization(Specialization specialization) {
         if (specialization != null) {
+            LoggingCSV.log("Showing all doctors by specialization");
             Clinic clinic = Clinic.getInstance();
             ArrayList<Doctor> doctors = clinic.getDoctors();
             StringBuilder out = new StringBuilder(specialization.toString());
@@ -64,6 +69,7 @@ public class CommonService {
 
     public void showPrescriptionHistory(Patient patient) {
         if (patient != null) {
+            LoggingCSV.log("Showing prescription history for patient " + patient.getFirstName() + " " + patient.getLastName());
             System.out.println("Patient: " +
                     patient.getFirstName() + " " +
                     patient.getLastName() + ", SSN: " +
@@ -78,6 +84,7 @@ public class CommonService {
 
     public void showDiagnosticHistory(Patient patient) {
         if (patient != null) {
+            LoggingCSV.log("Showing diagnostic history for " + patient.getFirstName() + " " + patient.getLastName());
             System.out.println("Patient: " +
                         patient.getFirstName() + " " +
                         patient.getLastName());
@@ -96,6 +103,7 @@ public class CommonService {
     }
 
     public double getTotalPrescriptionPrice(Prescription prescription) {
+        LoggingCSV.log("Calculating the total price of a prescription");
         double total = 0.0;
         if (prescription != null) {
             ArrayList<Medicine> medicines = prescription.getMedicines();

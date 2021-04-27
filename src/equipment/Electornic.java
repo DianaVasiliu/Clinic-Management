@@ -2,6 +2,7 @@ package equipment;
 
 import utilities.Date;
 import utilities.Errors;
+import utilities.LoggingCSV;
 
 import java.time.YearMonth;
 
@@ -18,6 +19,7 @@ public class Electornic extends Equipment {
 
     @Override
     public double calculateInvestmentOnMonth(int year, int month) {
+        LoggingCSV.log("Calculating investment on month on Electronics");
         YearMonth yearMonth = YearMonth.of(year, month);
         int daysInMonth = yearMonth.lengthOfMonth();
         return wattsPerHour * hoursUsed * wattPrice * daysInMonth;

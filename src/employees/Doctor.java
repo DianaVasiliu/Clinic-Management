@@ -3,6 +3,7 @@ package employees;
 import services.AdministratorService;
 import utilities.Date;
 import employees.utils.Specialization;
+import utilities.LoggingCSV;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ public class Doctor extends Employee {
 
     @Override
     public double calculateSalary() {
+        LoggingCSV.log("Calculating " + this.firstName + " " + this.lastName + "'s salary");
         Specialization specialization = this.getSpecialization();
         double consultationPrice = specialization.getConsultationPrice();
         AdministratorService administratorService = AdministratorService.getInstance();
