@@ -10,6 +10,17 @@ import java.util.ArrayList;
 
 public class ReceptionistService extends EmployeesService {
 
+    private static ReceptionistService instance;
+
+    private ReceptionistService() {}
+
+    public static ReceptionistService getInstance() {
+        if (instance == null) {
+            instance = new ReceptionistService();
+        }
+        return instance;
+    }
+
     public void addAppointment(Patient patient, Appointment appointment) {
         if (patient != null) {
             LoggingCSV.log("Adding appointment for " + patient.getFirstName() + " " + patient.getLastName());

@@ -30,6 +30,10 @@ public class NonConsumable extends Equipment {
         }
     }
 
+    public double getDaysAfterChange() {
+        return daysAfterChange;
+    }
+
     @Override
     public String toString() {
         return "NonConsumable{" +

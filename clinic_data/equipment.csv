@@ -1,0 +1,10 @@
+Consumable, gauze, 2.1, 2000, 10/10/2020, 0.5
+Consumable, disposable mask, 10.2, 50, 10/10/2020, 0.5
+Consumable, nitrile gloves, 13.2, 100, 10/10/2020, 0.2
+Consumable, batteries, 60.2, 1000, 11/10/2020, 100.0
+NonConsumable, stethoscope, 38.2, 1000.0, 23/1/2021
+NonConsumable, thermometer, 18.4, 365.0, 23/1/2021
+NonConsumable, pulse oximeter, 25.0, 300.0, 23/1/2021
+NonConsumable, sphyngomanometer, 40.0, 300.0, 23/1/2021
+Electronic, Electric Automatic Hospital Bed, 1190.0, 90.2, 10/12/2020
+Electronic, Ultrasound Machine, 15000.0, 103.2, 4/5/2020

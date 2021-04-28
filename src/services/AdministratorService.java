@@ -20,7 +20,7 @@ import java.util.HashMap;
 
 public class AdministratorService extends EmployeesService {
 
-    public static AdministratorService instance;
+    private static AdministratorService instance;
 
     private AdministratorService() {}
 
@@ -310,12 +310,8 @@ public class AdministratorService extends EmployeesService {
         try {
             month = month.toUpperCase();
             int number = Months.getNumber(Months.valueOf(month));
-            double profit = getProfitOnMonth(number, year);
 
-            if (profit < 0) {
-                throw new Exception();
-            }
-            return profit;
+            return getProfitOnMonth(number, year);
         }
         catch (Exception e) {
             System.err.println(Errors.INVALID_MONTH);
@@ -329,8 +325,8 @@ public class AdministratorService extends EmployeesService {
             double profit = getProfitOnMonth(month, year);
             int noOfPatients = getNumberOfPatientsOnMonth(month, year);
 
-            if (profit < 0 || noOfPatients <= 0) {
-                return -1;
+            if (noOfPatients <= 0) {
+                return 0;
             }
             return profit / noOfPatients;
         }
@@ -344,12 +340,8 @@ public class AdministratorService extends EmployeesService {
         try {
             month = month.toUpperCase();
             int number = Months.getNumber(Months.valueOf(month));
-            double average = getAverageProfitOnPatientOnMonth(number, year);
 
-            if (average < 0) {
-                throw new Exception();
-            }
-            return average;
+            return getAverageProfitOnPatientOnMonth(number, year);
         }
         catch (Exception e) {
             System.err.println(Errors.INVALID_MONTH);

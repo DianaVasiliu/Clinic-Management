@@ -10,6 +10,17 @@ import java.util.ArrayList;
 
 public class DoctorService extends EmployeesService {
 
+    private static DoctorService instance;
+
+    private DoctorService() {}
+
+    public static DoctorService getInstance() {
+        if (instance == null) {
+            instance = new DoctorService();
+        }
+        return instance;
+    }
+
     public void addPrescription(Patient patient, Prescription prescription) {
         if (patient != null) {
             LoggingCSV.log("Adding prescription to " + patient.getFirstName() + " " + patient.getLastName());

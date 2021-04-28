@@ -43,6 +43,7 @@ public enum Specialization {
     }
 
     public static Specialization getSpecialization(String name) {
+        name = name.toUpperCase().replace(" ", "_");
         return map.get(name);
     }
 

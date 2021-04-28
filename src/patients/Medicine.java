@@ -77,6 +77,6 @@ public class Medicine {
                 ", producer='" + producer + '\'' +
                 ", price=" + price +
                 ", activeSubstance='" + activeSubstance + '\'' +
-                '}';
+                "}";
     }
 }

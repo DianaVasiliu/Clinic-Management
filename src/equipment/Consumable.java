@@ -8,11 +8,20 @@ import java.time.YearMonth;
 public class Consumable extends Equipment {
 
     private final int numberOfItemsInPackage;
-    private double averageDaysItLasts;
+    private final double averageDaysItLasts;
 
-    public Consumable(String name, double price, int number, Date buyDate) {
+    public Consumable(String name, double price, int number, Date buyDate, double days) {
         super(name, price, buyDate);
         this.numberOfItemsInPackage = number;
+        this.averageDaysItLasts = days;
+    }
+
+    public double getAverageDaysItLasts() {
+        return averageDaysItLasts;
+    }
+
+    public int getNumberOfItemsInPackage() {
+        return numberOfItemsInPackage;
     }
 
     @Override
