@@ -1,3 +1,4 @@
+JOB, FIRST NAME, LAST NAME, BURTHDAY, SEX, EXPERIENCE, SPECIALIZATION
 Doctor, Jennifer, Lawrence, 4/10/1988, F, 3, endocrinology
 Doctor, Denis, Andrew, 12/7/1988, M, 1, gynecology
 Doctor, George, Boole, 16/2/1969, M, 3, gynecology
@@ -6,16 +7,16 @@ Doctor, John, Smith, 12/9/1987, M, 5, gynecology
 Doctor, Emily, Blue, 3/12/1985, F, 10, pediatrics
 Doctor, Mark, Blue, 9/1/1990, M, 5, pediatrics
 Doctor, Kevin, Spacey, 2/10/1965, M, 6, psychiatry
-Nurse, Angelina, Cuddy, 19/4/1974, F, 10
-Nurse, Monica, Geller, 6/8/1988, F, 3
-Nurse, Amanda, Grey, 9/10/1973, F, 9
-Nurse, Emily, Jordan, 16/4/1993, F, 2
-Nurse, Lily, London, 19/4/1992, F, 1
-Nurse, Lorene, Luna, 16/12/1957, F, 21
-Nurse, Chase, Wilson, 1/8/1980, M, 9
-Receptionist, Vanessa, Black, 3/4/1972, F, 2
-Receptionist, Davion, Dragon, 10/5/1989, M, 2
-Receptionist, Amanda, Grey, 31/5/1986, F, 9
-Receptionist, Mimi, Hopkins, 7/7/1996, F, 2
-Receptionist, Mirana, Moon, 3/9/1973, F, 3
-Receptionist, Anna, Sky, 6/2/1991, F, 4
+Nurse, Angelina, Cuddy, 19/4/1974, F, 10, 
+Nurse, Monica, Geller, 6/8/1988, F, 3, 
+Nurse, Amanda, Grey, 9/10/1973, F, 9, 
+Nurse, Emily, Jordan, 16/4/1993, F, 2, 
+Nurse, Lily, London, 19/4/1992, F, 1, 
+Nurse, Lorene, Luna, 16/12/1957, F, 21, 
+Nurse, Chase, Wilson, 1/8/1980, M, 9, 
+Receptionist, Vanessa, Black, 3/4/1972, F, 2, 
+Receptionist, Davion, Dragon, 10/5/1989, M, 2, 
+Receptionist, Amanda, Grey, 31/5/1986, F, 9, 
+Receptionist, Mimi, Hopkins, 7/7/1996, F, 2, 
+Receptionist, Mirana, Moon, 3/9/1973, F, 3, 
+Receptionist, Anna, Sky, 6/2/1991, F, 4, 

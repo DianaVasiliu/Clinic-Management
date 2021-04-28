@@ -31,6 +31,7 @@ public class EmployeeCSVManipulation implements CSVManipulation {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
 
             String line = reader.readLine();
+            line = reader.readLine();
             while (line != null) {
                 String[] info = line.split(",");
                 ArrayList<String> lineInfo = new ArrayList<>(Arrays.asList(info));
@@ -107,6 +108,7 @@ public class EmployeeCSVManipulation implements CSVManipulation {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
 
             ArrayList<Employee> employees = AdministratorService.getInstance().getAllEmployees();
+            writer.write("JOB, FIRST NAME, LAST NAME, BURTHDAY, SEX, EXPERIENCE, SPECIALIZATION\n");
             for (Employee e : employees) {
                 StringBuilder output = new StringBuilder();
                 String date = e.getBirthday().getDay() + "/" + e.getBirthday().getMonth() + "/" + e.getBirthday().getYear();
@@ -115,11 +117,11 @@ public class EmployeeCSVManipulation implements CSVManipulation {
                         .append(e.getLastName()).append(", ")
                         .append(date).append(", ")
                         .append(e.getSex()).append(", ")
-                        .append(e.getExperience());
+                        .append(e.getExperience()).append(", ");
 
                 if (e instanceof Doctor) {
                     output.insert(0, "Doctor, ");
-                    output.append(", ").append(((Doctor) e).getSpecialization().name().toLowerCase());
+                    output.append(((Doctor) e).getSpecialization().name().toLowerCase());
                 }
                 else if (e instanceof Nurse) {
                     output.insert(0, "Nurse, ");

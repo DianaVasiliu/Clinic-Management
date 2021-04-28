@@ -28,6 +28,7 @@ public class PatientCSVManipulation implements CSVManipulation {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
 
             String line = reader.readLine();
+            line = reader.readLine();
             while (line != null) {
                 String[] info = line.split(",");
                 ArrayList<String> lineInfo = new ArrayList<>(Arrays.asList(info));
@@ -71,6 +72,7 @@ public class PatientCSVManipulation implements CSVManipulation {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
 
             ArrayList<Patient> patients = Clinic.getInstance().getPatients();
+            writer.write("FIRST NAME, LAST NAME, SNN, AGE, SEX, HEIGHT, WEIGHT\n");
             for (Patient p : patients) {
                 String output = p.getFirstName() + ", " +
                         p.getLastName() + ", " +

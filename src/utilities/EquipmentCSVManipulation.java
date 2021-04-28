@@ -31,6 +31,7 @@ public class EquipmentCSVManipulation implements CSVManipulation {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
 
             String line = reader.readLine();
+            line = reader.readLine();
             while (line != null) {
                 String[] info = line.split(",");
                 ArrayList<String> lineInfo = new ArrayList<>(Arrays.asList(info));
@@ -103,6 +104,7 @@ public class EquipmentCSVManipulation implements CSVManipulation {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
 
             ArrayList<Equipment> equipment = Clinic.getInstance().getEquipment();
+            writer.write("TYPE, NAME, PRICE, PACKAGE OF/CONSUMPTION, BUY DATE, AVERAGE DAYS IT LASTS\n");
             for (Equipment e : equipment) {
                 StringBuilder output = new StringBuilder();
 
@@ -114,11 +116,11 @@ public class EquipmentCSVManipulation implements CSVManipulation {
 
                 if (e instanceof Electronic) {
                     output.append(((Electronic) e).getWattsPerHour()).append(", ")
-                            .append(date);
+                            .append(date).append(", ");
                 }
                 else if (e instanceof NonConsumable) {
                     output.append(((NonConsumable) e).getDaysAfterChange()).append(", ")
-                            .append(date);
+                            .append(date).append(", ");
                 }
                 else if (e instanceof Consumable) {
                     output.append(((Consumable) e).getNumberOfItemsInPackage()).append(", ")
