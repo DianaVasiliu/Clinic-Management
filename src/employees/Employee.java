@@ -37,7 +37,7 @@ public abstract class Employee {
         if (employee != null) {
             this.firstName = employee.firstName;
             this.lastName = employee.lastName;
-            this.birthday = new Date(employee.birthday);
+            this.birthday = employee.birthday;
             this.sex = employee.sex;
             this.age = employee.age;
             this.experience = employee.experience;
@@ -76,7 +76,8 @@ public abstract class Employee {
     }
 
     public void setBirthday(Date birthday) {
-        this.birthday = new Date(birthday);
+        this.birthday = birthday;
+        this.setAge();
     }
 
     public void setSex(char sex) {
@@ -116,6 +117,10 @@ public abstract class Employee {
         }
     }
 
+    public void setID(long ID) {
+        this.ID = ID;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -146,6 +151,14 @@ public abstract class Employee {
 
     public long getID() {
         return ID;
+    }
+
+    public static double getSalaryPerHour() {
+        return salaryPerHour;
+    }
+
+    public static int getHoursPerDay() {
+        return hoursPerDay;
     }
 
     public ArrayList<String> getNotifications() {

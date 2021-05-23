@@ -101,6 +101,10 @@ public class Date implements Comparable<Date> {
         return day;
     }
 
+    public String getFullDate() {
+        return year + "-" + month + "-" + day;
+    }
+
     @Override
     public String toString() {
         return day + "/" + month + "/" + year;

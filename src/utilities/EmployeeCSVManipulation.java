@@ -108,7 +108,7 @@ public class EmployeeCSVManipulation implements CSVManipulation {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
 
             ArrayList<Employee> employees = AdministratorService.getInstance().getAllEmployees();
-            writer.write("JOB, FIRST NAME, LAST NAME, BURTHDAY, SEX, EXPERIENCE, SPECIALIZATION\n");
+            writer.write("JOB, FIRST NAME, LAST NAME, BIRTHDAY, SEX, EXPERIENCE, SPECIALIZATION\n");
             for (Employee e : employees) {
                 StringBuilder output = new StringBuilder();
                 String date = e.getBirthday().getDay() + "/" + e.getBirthday().getMonth() + "/" + e.getBirthday().getYear();

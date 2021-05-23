@@ -1,6 +1,7 @@
 package clinic;
 
 import employees.Doctor;
+import employees.Employee;
 import employees.Nurse;
 import employees.Receptionist;
 import equipment.Equipment;
@@ -62,6 +63,14 @@ public class Clinic {
 
     public ArrayList<Receptionist> getReceptionists() {
         return receptionists;
+    }
+
+    public ArrayList<Employee> getEmployees() {
+        ArrayList<Employee> employees = new ArrayList<>();
+        employees.addAll(getDoctors());
+        employees.addAll(getNurses());
+        employees.addAll(getReceptionists());
+        return employees;
     }
 
     public ArrayList<Medicine> getMedicines() {

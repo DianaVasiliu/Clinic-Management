@@ -13,19 +13,21 @@ import employees.utils.cmpName;
 import patients.*;
 import patients.utils.cmpMedicineNameSubst;
 import patients.utils.cmpMedicineSubstName;
+import repositories.AdministratorRepo;
+import repositories.ReceptionistRepo;
 import services.*;
 import utilities.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static employees.utils.Specialization.*;
 
 public class Main {
 
     public static void main(String[] args) {
-
-        DatabaseOperations.initializeDatabase();
 
         final String GREEN_BACKGROUND = "\u001B[42m";
         final String BLACK = "\u001B[30m";
@@ -34,6 +36,20 @@ public class Main {
 
         // Read data from .csv
         readData();
+
+        // database creation
+        DatabaseOperations.initializeDatabase();
+
+        // adding the patients from csv to database
+        ReceptionistRepo receptionistRepo = new ReceptionistRepo();
+        for (Patient patient : Clinic.getInstance().getPatients()) {
+            receptionistRepo.insertPatient(patient);
+        }
+
+        AdministratorRepo administratorRepo = new AdministratorRepo();
+        for (Employee employee : Clinic.getInstance().getEmployees()) {
+            administratorRepo.insertEmployee(employee);
+        }
 
         System.out.println(GREEN_BACKGROUND + BLACK + "========== CLINIC INFORMATION ========================" + RESET);
 
@@ -56,6 +72,8 @@ public class Main {
         System.out.println("Did someone ask what's the clinic's name? It's: " + clinic.getName());
         System.out.println();
 
+        administratorRepo.insertEmployee(administrator);
+
         System.out.println(GREEN_BACKGROUND + BLACK + "========== MAKING CHANGES TO CLINIC INFO ========================" + RESET);
 
         // Administrator & Clinic setter methods
@@ -77,6 +95,11 @@ public class Main {
         System.out.println();
 
         System.out.println(GREEN_BACKGROUND + BLACK + "========== EMPLOYEES INFORMATION ========================" + RESET);
+
+        System.out.println("The employee with ID = 1:");
+        Employee emp = administratorRepo.selectEmployeeById(1);
+        System.out.println(emp);
+        System.out.println();
 
         // Doctor Specialization methods
         Doctor doctor = Clinic.getInstance().getDoctors().get(4);
@@ -373,6 +396,17 @@ public class Main {
         System.out.println(administratorService.getProfitOnMonth("OCTOBER", 2020));
         System.out.println("Average profit on patient in October 2020");
         System.out.println(administratorService.getAverageProfitOnPatientOnMonth("OCTOBER", 2020));
+
+        Patient patient1 = receptionistRepo.selectPatientById(3);
+        System.out.println(patient1);
+
+        var patients = receptionistRepo.selectPatientsWithCriteria("last_name", "Blue");
+        System.out.println(patients);
+
+        patients = receptionistRepo.selectPatientsWithCriteria("sex", "F");
+        System.out.println(patients);
+
+//        receptionistRepo.deletePatientById(3);
 
         saveData();
     }

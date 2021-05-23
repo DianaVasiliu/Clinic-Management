@@ -4,7 +4,7 @@ import patients.utils.cmpAppointmentDate;
 
 import java.util.ArrayList;
 
-public class Patient {
+public class Patient implements Comparable<Patient> {
 
     private long ID;
     private static long noOfPatients;
@@ -115,6 +115,10 @@ public class Patient {
         this.debt = debt;
     }
 
+    public void setID(long ID) {
+        this.ID = ID;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -173,5 +177,10 @@ public class Patient {
                 ", height=" + height +
                 ", weight=" + weight +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Patient o) {
+        return this.getLastName().compareTo(o.getLastName());
     }
 }

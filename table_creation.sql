@@ -1,5 +1,8 @@
+DELIMITER //
+CREATE PROCEDURE create_tables()
+BEGIN
 CREATE TABLE IF NOT EXISTS employees (
-	id 				INTEGER PRIMARY KEY AUTO_INCREMENT,
+	id 				INTEGER PRIMARY KEY,
     first_name 		VARCHAR(40),
     last_name 		VARCHAR(40),
     birthday 		DATE,
@@ -12,11 +15,11 @@ CREATE TABLE IF NOT EXISTS employees (
     hours_per_day 	INTEGER,
     emp_type 		VARCHAR(20),
     CONSTRAINT emp_sex_check
-		CHECK (sex IN ('f', 'F', 'm', 'M')),
+		CHECK (sex IN ('f', 'F', 'm', 'M', null)),
 	CONSTRAINT emp_age_check
 		CHECK (age >= 18),
 	CONSTRAINT emp_salary_check
-		CHECK (salary > 0),
+		CHECK (salary >= 0),
 	CONSTRAINT emp_experience_check
 		CHECK (experience >= 0),
 	CONSTRAINT emp_daysWorked_check
@@ -38,7 +41,7 @@ CREATE TABLE IF NOT EXISTS doctor (
 );
 
 CREATE TABLE IF NOT EXISTS equipment (
-	id 					INTEGER PRIMARY KEY AUTO_INCREMENT,
+	id 					INTEGER PRIMARY KEY,
     name 				VARCHAR(40),
     price 				DOUBLE,
     buy_date 			DATE,
@@ -50,7 +53,7 @@ CREATE TABLE IF NOT EXISTS equipment (
 );
 
 CREATE TABLE IF NOT EXISTS consumable (
-	id					INTEGER PRIMARY KEY AUTO_INCREMENT,
+	id					INTEGER PRIMARY KEY,
     items_in_package	INTEGER,
     avg_last_time		DOUBLE,
 	CONSTRAINT consumable_itemsInPackage_check
@@ -60,14 +63,14 @@ CREATE TABLE IF NOT EXISTS consumable (
 );
 
 CREATE TABLE IF NOT EXISTS nonconsumable (
-	id					INTEGER PRIMARY KEY AUTO_INCREMENT,
+	id					INTEGER PRIMARY KEY,
     days_after_change	DOUBLE,
 	CONSTRAINT nonconsumable_daysAfterChange_check
 		CHECK (days_after_change >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS electronic (
-	id					INTEGER PRIMARY KEY AUTO_INCREMENT,	
+	id					INTEGER PRIMARY KEY,	
 	watts_per_hour		DOUBLE,
     hours_used			DOUBLE,
 	CONSTRAINT electronic_watts_check
@@ -77,7 +80,7 @@ CREATE TABLE IF NOT EXISTS electronic (
 );
 
 CREATE TABLE IF NOT EXISTS patient (
-	id		INTEGER PRIMARY KEY AUTO_INCREMENT,
+	id		INTEGER PRIMARY KEY,
     first_name 		VARCHAR(40),
     last_name 		VARCHAR(40),
     SSN				VARCHAR(20),
@@ -85,13 +88,13 @@ CREATE TABLE IF NOT EXISTS patient (
     sex				CHAR(1),
     height			INTEGER,
     weight			DOUBLE,
-    debt			DOUBLE,
+    debt			DOUBLE DEFAULT 0,
     CONSTRAINT patient_ssn_check
-		CHECK (length(ssn) = 9),
+		CHECK (length(ssn) = 11),
 	CONSTRAINT patient_age_check
 		CHECK (age >= 0),
 	CONSTRAINT patient_sex_check
-		CHECK (sex IN ('f', 'F', 'm', 'M')),
+		CHECK (sex IN ('f', 'F', 'm', 'M', null)),
 	CONSTRAINT patient_height_check
 		CHECK (height > 0 AND height < 250),
 	CONSTRAINT patient_weight_check
@@ -101,7 +104,7 @@ CREATE TABLE IF NOT EXISTS patient (
 );
 
 CREATE TABLE IF NOT EXISTS appointment (
-	id			INTEGER PRIMARY KEY AUTO_INCREMENT,
+	id			INTEGER PRIMARY KEY,
     date_time	DATETIME,
     doctor_id	INTEGER NOT NULL,
     patient_id	INTEGER NOT NULL,
@@ -114,13 +117,13 @@ CREATE TABLE IF NOT EXISTS appointment (
 );
 
 CREATE TABLE IF NOT EXISTS diagnostic (
-	id				INTEGER PRIMARY KEY AUTO_INCREMENT,
+	id				INTEGER PRIMARY KEY,
     description		VARCHAR(200),
     discover_date	DATE
 );
 
 CREATE TABLE IF NOT EXISTS medicine (
-	id					INTEGER PRIMARY KEY AUTO_INCREMENT,
+	id					INTEGER PRIMARY KEY,
     name				VARCHAR(40),
     producer			VARCHAR(50),
     price				DOUBLE,
@@ -134,3 +137,6 @@ CREATE TABLE IF NOT EXISTS treatment (
     med_quantity	DOUBLE,
     PRIMARY KEY (patient_id, diagnostic_id, medicine_id)
 );
+END
+//
+DELIMITER ;
