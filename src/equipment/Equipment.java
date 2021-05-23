@@ -4,9 +4,16 @@ import utilities.Date;
 
 public abstract class Equipment {
 
+    private long ID;
+    private static long noOfEquipment;
     protected String name;
     protected double price;
     protected Date buyDate;
+
+    {
+        noOfEquipment++;
+        ID = noOfEquipment;
+    }
 
     public Equipment(String name, double price, Date buyDate) {
         this.name = name;
@@ -40,6 +47,10 @@ public abstract class Equipment {
 
     public Date getBuyDate() {
         return buyDate;
+    }
+
+    public long getID() {
+        return ID;
     }
 
     @Override

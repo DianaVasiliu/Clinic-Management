@@ -10,15 +10,15 @@ import java.util.Arrays;
 
 public class MedicineCSVManipulation implements CSVManipulation {
 
-    private static MedicineCSVManipulation reader;
+    private static MedicineCSVManipulation instance;
 
     private MedicineCSVManipulation() {}
 
     public static MedicineCSVManipulation getInstance() {
-        if (reader == null) {
-            reader = new MedicineCSVManipulation();
+        if (instance == null) {
+            instance = new MedicineCSVManipulation();
         }
-        return reader;
+        return instance;
     }
 
     @Override

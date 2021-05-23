@@ -13,15 +13,15 @@ import java.util.Arrays;
 
 public class EmployeeCSVManipulation implements CSVManipulation {
 
-    private static EmployeeCSVManipulation reader;
+    private static EmployeeCSVManipulation instance;
 
     private EmployeeCSVManipulation() {}
 
     public static EmployeeCSVManipulation getInstance() {
-        if (reader == null) {
-            reader = new EmployeeCSVManipulation();
+        if (instance == null) {
+            instance = new EmployeeCSVManipulation();
         }
-        return reader;
+        return instance;
     }
 
     @Override

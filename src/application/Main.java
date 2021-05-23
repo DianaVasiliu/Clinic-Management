@@ -2,6 +2,7 @@ package application;
 
 import clinic.Administrator;
 import clinic.Clinic;
+import database.DatabaseOperations;
 import employees.Doctor;
 import employees.Employee;
 import employees.Nurse;
@@ -23,6 +24,8 @@ import static employees.utils.Specialization.*;
 public class Main {
 
     public static void main(String[] args) {
+
+        DatabaseOperations.initializeDatabase();
 
         final String GREEN_BACKGROUND = "\u001B[42m";
         final String BLACK = "\u001B[30m";
@@ -80,7 +83,7 @@ public class Main {
         Doctor doctor1 = Clinic.getInstance().getDoctors().get(5);
 
         System.out.println("Doctor " + doctor.getFirstName() + " " + doctor.getLastName() +
-                           " is specialized in " + doctor.getSpecialization());
+                " is specialized in " + doctor.getSpecialization());
         doctor.setSpecialization(GYNECOLOGY);
         System.out.println((doctor.getSex() == 'M' ? "He" : "She") +
                 " changed specialization... The new one is " + doctor.getSpecialization());
@@ -104,7 +107,6 @@ public class Main {
         administratorService.showReceptionists();
 
         System.out.println();
-
         System.out.println("Who's the most experienced employee and who is the youngest?");
         int maxiExp = 0;
         int miniAge = 100;

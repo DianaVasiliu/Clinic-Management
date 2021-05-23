@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 public class Patient {
 
+    private long ID;
+    private static long noOfPatients;
     private String firstName;
     private String lastName;
     private String SSN;
@@ -13,7 +15,8 @@ public class Patient {
     private char sex;
     private int height;
     private double weight;
-    private final ArrayList<Appointment> appointments = new ArrayList<>() {
+    private double debt;
+    private ArrayList<Appointment> appointments = new ArrayList<>() {
         @Override
         public boolean add(Appointment appointment) {
             super.add(appointment);
@@ -21,9 +24,8 @@ public class Patient {
             return true;
         }
     };
-    private final ArrayList<Diagnostic> diagnostics = new ArrayList<>();
-    private final ArrayList<Prescription> prescriptions = new ArrayList<>();
-    private double debt;
+    private ArrayList<Diagnostic> diagnostics = new ArrayList<>();
+    private ArrayList<Prescription> prescriptions = new ArrayList<>();
 
     public Patient(String firstName, String lastName, String SSN, int age, char sex, int height, double weight) {
         setFirstName(firstName);
@@ -33,6 +35,28 @@ public class Patient {
         setSex(sex);
         setHeight(height);
         setWeight(weight);
+    }
+
+    public Patient(Patient patient) {
+        if (patient != null) {
+            this.ID = patient.getID();
+            this.firstName = patient.getFirstName();
+            this.lastName = patient.getLastName();
+            this.SSN = patient.getSSN();
+            this.age = patient.getAge();
+            this.sex = patient.getSex();
+            this.height = patient.getHeight();
+            this.weight = patient.getWeight();
+            this.debt = patient.getDebt();
+            this.appointments = new ArrayList<>(patient.getAppointments());
+            this.diagnostics = new ArrayList<>(patient.getDiagnostics());
+            this.prescriptions = new ArrayList<>(patient.getPrescriptions());
+        }
+    }
+
+    {
+        noOfPatients++;
+        this.ID = noOfPatients;
     }
 
     /* setters & getters */
@@ -121,6 +145,10 @@ public class Patient {
 
     public double getDebt() {
         return debt;
+    }
+
+    public long getID() {
+        return ID;
     }
 
     public ArrayList<Appointment> getAppointments() {

@@ -6,9 +6,16 @@ import java.util.ArrayList;
 
 public class Diagnostic {
 
+    private static long noOfDiagnostics;
+    private long ID;
     private String description;
     private ArrayList<Medicine> treatment;
     private Date date;
+
+    {
+        noOfDiagnostics++;
+        ID = noOfDiagnostics;
+    }
 
     public Diagnostic(String description, ArrayList<Medicine> treatment, Date date) {
         this.description = description;

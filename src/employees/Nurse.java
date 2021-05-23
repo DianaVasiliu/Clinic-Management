@@ -5,11 +5,8 @@ import utilities.LoggingCSV;
 
 public class Nurse extends Employee {
 
-    private static final double costPerHour;
-    protected static final int hoursPerDay;
-
     static {
-        costPerHour = 17.9;
+        salaryPerHour = 17.9;
         hoursPerDay = 10;
     }
 
@@ -24,7 +21,7 @@ public class Nurse extends Employee {
     @Override
     public double calculateSalary() {
         LoggingCSV.log("Calculating the salary of " + this.firstName + " " + this.lastName);
-        double salary = this.getDaysWorked() * costPerHour * hoursPerDay;
+        double salary = this.getDaysWorked() * salaryPerHour * hoursPerDay;
         double bonus = salary * (5 + experience) / 100;
         salary += bonus;
         return salary;

@@ -10,15 +10,15 @@ import java.util.Arrays;
 
 public class PatientCSVManipulation implements CSVManipulation {
 
-    private static PatientCSVManipulation reader;
+    private static PatientCSVManipulation instance;
 
     private PatientCSVManipulation() {}
 
     public static PatientCSVManipulation getInstance() {
-        if (reader == null) {
-            reader = new PatientCSVManipulation();
+        if (instance == null) {
+            instance = new PatientCSVManipulation();
         }
-        return reader;
+        return instance;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class PatientCSVManipulation implements CSVManipulation {
             System.out.println(e.getMessage());
         }
         catch (Exception e) {
-            System.out.println("Other exeption");
+            System.out.println("Other exception");
             System.out.println(e.getMessage());
         }
     }

@@ -6,9 +6,16 @@ import utilities.Date;
 
 public class Appointment {
 
+    private static long noOfAppointments;
+    private long ID;
     private Date date;
     private Doctor doctor;
     private String time;
+
+    {
+        noOfAppointments++;
+        ID = noOfAppointments;
+    }
 
     public Appointment(Date date, String time, Doctor doctor) {
         this.date = new Date(date);
@@ -18,6 +25,7 @@ public class Appointment {
 
     public Appointment(Appointment appointment) {
         if (appointment != null) {
+            this.ID = appointment.ID;
             this.date = new Date(appointment.date);
             this.doctor = appointment.doctor;
             this.time = appointment.time;
@@ -54,8 +62,8 @@ public class Appointment {
     public String toString() {
         return "Appointment" +
                 "\n\tDoctor:  " + doctor.getFirstName() + " "
-                                + doctor.getLastName() + ", "
-                                + Specialization.getSpecString(doctor.getSpecialization()) +
+                + doctor.getLastName() + ", "
+                + Specialization.getSpecString(doctor.getSpecialization()) +
                 "\n\tDate:    " + date +
                 "\n\tTime:    " + time;
     }

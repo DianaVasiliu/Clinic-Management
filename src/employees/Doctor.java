@@ -11,11 +11,9 @@ import java.util.HashMap;
 public class Doctor extends Employee {
 
     private Specialization specialization;
-    private static final double costPerHour;
-    protected static final int hoursPerDay;
 
     static {
-        costPerHour = 21.7;
+        salaryPerHour = 21.7;
         hoursPerDay = 12;
     }
 
@@ -47,7 +45,7 @@ public class Doctor extends Employee {
                 numberOfPatients = map.get(specialization.toString());
             }
         }
-        double salary = this.getDaysWorked() * costPerHour * hoursPerDay;
+        double salary = this.getDaysWorked() * salaryPerHour * hoursPerDay;
         double bonus = numberOfPatients * consultationPrice + salary * (5 + experience) / 100;
         salary += bonus;
 

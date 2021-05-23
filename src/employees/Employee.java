@@ -15,6 +15,8 @@ public abstract class Employee {
     protected double salary;
     protected int experience;
     protected int daysWorked;
+    protected static double salaryPerHour;
+    protected static int hoursPerDay;
     private long ID;
     private ArrayList<String> notifications = new ArrayList<>();
     public static long noOfEmployees;
