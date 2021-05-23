@@ -30,3 +30,21 @@ Proiectul are scop didactic.
 6. Diagnostic
 7. Programare
 8. Reteta Medicala
+
+## Baza de date
+
+Pentru a putea utiliza baza de date folosind JDBC,
+in cadrul proiectului trebuie adaugat un driver care transpune comenzile
+din aplicatie in limbajul sistemului de gestiune a bazei de date (MySQL).
+
+In procesul de development al aplicatiei, pentru a putea folosi MySQL,
+a fost necesara instalarea serverului Xampp si rularea MySQL cu ajutorul lui.
+De asemenea, pentru interactiunea cu baza de date, folosim MySQL Workbench.
+
+In MySQL Workbench, am creat o conexiune noua si o baza de date in cadrul acesteia.
+Am creat un user nou, caruia am acordat toate privilegiile (de administrator).
+
+Pentru a putea realiza conexiunea dintre aplicatia Java si baza de date,
+trebuie adaugata o dependinta in proiect, care sa importe driver-ul necesar
+de MySQL instalat local. Driver-ul poate fi descarcat de
+[aici](https://search.maven.org/classic/remotecontent?filepath=mysql/mysql-connector-java/8.0.20/mysql-connector-java-8.0.20.jar).
