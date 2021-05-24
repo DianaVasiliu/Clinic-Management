@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 
-public abstract class Employee {
+public abstract class Employee implements Comparable<Employee> {
     protected String firstName;
     protected String lastName;
     protected Date birthday;
@@ -29,6 +29,11 @@ public abstract class Employee {
         setAge();
         setExperience(experience);
         this.salary = calculateSalary();
+    }
+
+    @Override
+    public int compareTo(Employee o) {
+        return Long.compare(this.getID(), o.getID());
     }
 
     public Employee() {}

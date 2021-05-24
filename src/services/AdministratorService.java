@@ -10,6 +10,7 @@ import equipment.Equipment;
 import patients.Appointment;
 import patients.Medicine;
 import patients.Patient;
+import repositories.AdministratorRepo;
 import utilities.Errors;
 import utilities.LoggingCSV;
 import utilities.Months;
@@ -70,13 +71,7 @@ public class AdministratorService extends EmployeesService {
 
     public void raiseSalary(double percentage) {
         Clinic clinic = Clinic.getInstance();
-        ArrayList<Doctor> doctors = clinic.getDoctors();
-        ArrayList<Nurse> nurses = clinic.getNurses();
-        ArrayList<Receptionist> receptionists = clinic.getReceptionists();
-        ArrayList<Employee> employees = new ArrayList<>();
-        employees.addAll(doctors);
-        employees.addAll(nurses);
-        employees.addAll(receptionists);
+        ArrayList<Employee> employees = clinic.getEmployees();
 
         if (percentage < 0 || percentage > 100) {
             System.err.println(Errors.WRONG_PERCENTAGE);
@@ -93,6 +88,7 @@ public class AdministratorService extends EmployeesService {
             salary += salary * percentage;
             employee.setSalary(salary);
             employee.getNotifications().add("Raised salary by " + percentage * 100 + "%");
+            AdministratorRepo.getInstance().updateEmployeeSalary("id", " = " + employee.getID(), salary);
         }
     }
 

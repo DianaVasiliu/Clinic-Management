@@ -1,6 +1,5 @@
 package repositories;
 
-import clinic.Administrator;
 import database.DBConfig;
 import employees.Doctor;
 import employees.Employee;
@@ -10,17 +9,24 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import employees.Nurse;
-import employees.Receptionist;
-import employees.utils.Specialization;
 import equipment.Consumable;
 import equipment.Electronic;
 import equipment.Equipment;
 import equipment.NonConsumable;
 import patients.Medicine;
-import utilities.Date;
 
-public class AdministratorRepo {
+public class AdministratorRepo extends CommonRepo {
+
+    private static AdministratorRepo instance;
+
+    private AdministratorRepo() {}
+
+    public static AdministratorRepo getInstance() {
+        if (instance == null) {
+            instance = new AdministratorRepo();
+        }
+        return instance;
+    }
 
     public void insertEmployee(Employee employee) {
         if (employee != null) {
@@ -70,87 +76,6 @@ public class AdministratorRepo {
         }
     }
 
-    public Employee selectEmployeeById(long id) {
-        String query = "SELECT * FROM employees WHERE id = ?";
-        Connection connection = DBConfig.getDatabaseConnection();
-        Employee employee = null;
-
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setLong(1, id);
-            ResultSet result = statement.executeQuery();
-
-            if (result.next()) {
-                String first_name = result.getString("first_name");
-                String last_name = result.getString("last_name");
-                Date birthday = new Date(result.getDate("birthday").toLocalDate().getDayOfMonth(),
-                                         result.getDate("birthday").toLocalDate().getMonthValue(),
-                                         result.getDate("birthday").toLocalDate().getYear());
-                char sex = result.getString("sex").charAt(0);
-                int experience = result.getInt("experience");
-                String emp_type = result.getString("emp_type");
-
-                switch (emp_type) {
-                    case "doctor" -> {
-                        String query2 = "SELECT specialization FROM doctor WHERE id = ?";
-                        PreparedStatement statement1 = connection.prepareStatement(query2);
-                        statement1.setLong(1, id);
-                        ResultSet res1 = statement1.executeQuery();
-                        String specialization = "";
-                        if (res1.next()) {
-                            specialization = res1.getString("specialization");
-                        }
-                        employee = new Doctor(first_name, last_name, birthday, sex, Specialization.getSpecialization(specialization), experience);
-                    }
-                    case "nurse" -> employee = new Nurse(first_name, last_name, birthday, sex, experience);
-                    case "receptionist" -> employee = new Receptionist(first_name, last_name, birthday, sex, experience);
-                    case "administrator" -> {
-                        Administrator administrator = Administrator.getInstance();
-                        administrator.setFirstName(first_name);
-                        administrator.setLastName(last_name);
-                        administrator.setBirthday(birthday);
-                        administrator.setSex(sex);
-                        administrator.calculateSalary();
-                        administrator.setExperience(experience);
-                        employee = administrator;
-                    }
-                }
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        if (employee != null) {
-            employee.setID(id);
-        }
-        return employee;
-    }
-
-    public Medicine selectMedicineById(long id) {
-        String query = "SELECT * FROM medicine WHERE id = ?";
-        Connection connection = DBConfig.getDatabaseConnection();
-        Medicine medicine = null;
-
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setLong(1, id);
-            ResultSet result = statement.executeQuery();
-
-            if (result.next()) {
-                String name = result.getString("name");
-                String producer = result.getString("producer");
-                double price = result.getDouble("price");
-                String active_substance = result.getString("active_substance");
-
-                medicine = new Medicine(name, producer, price, active_substance);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return medicine;
-    }
-
     public void insertMedicine(Medicine medicine) {
         if (medicine != null) {
             Medicine dbMedicine = selectMedicineById(medicine.getID());
@@ -174,72 +99,6 @@ public class AdministratorRepo {
                 throwables.printStackTrace();
             }
         }
-    }
-
-    public Equipment selectEquipmentById(long id) {
-        String query = "SELECT * FROM equipment WHERE id = ?";
-        Connection connection = DBConfig.getDatabaseConnection();
-        Equipment equipment = null;
-
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setLong(1, id);
-            ResultSet result = statement.executeQuery();
-
-            if (result.next()) {
-                String name = result.getString("name");
-                double price = result.getDouble("price");
-                Date buy_date = new Date(result.getDate("buy_date").toLocalDate().getDayOfMonth(),
-                                         result.getDate("buy_date").toLocalDate().getMonthValue(),
-                                         result.getDate("buy_date").toLocalDate().getYear());
-                String eq_type = result.getString("eq_type");
-
-                switch (eq_type) {
-                    case "electronic" -> {
-                        String query2 = "SELECT watts_per_hour FROM electronic WHERE id = ?";
-                        PreparedStatement statement1 = connection.prepareStatement(query2);
-                        statement1.setLong(1, id);
-                        ResultSet result1 = statement1.executeQuery();
-                        double watts_per_hour = 0.0;
-                        if (result1.next()) {
-                            watts_per_hour = result1.getDouble("watts_per_hour");
-                        }
-
-                        equipment = new Electronic(name, price, watts_per_hour, buy_date);
-                    }
-                    case "consumable" -> {
-                        String query2 = "SELECT * FROM consumable WHERE id = ?";
-                        PreparedStatement statement1 = connection.prepareStatement(query2);
-                        statement1.setLong(1, id);
-                        ResultSet result1 = statement1.executeQuery();
-                        int items_in_package = 0;
-                        double avg_last_time = 0.0;
-                        if (result1.next()) {
-                            items_in_package = result1.getInt("items_in_package");
-                            avg_last_time = result1.getDouble("avg_last_time");
-                        }
-
-                        equipment = new Consumable(name, price, items_in_package, buy_date, avg_last_time);
-                    }
-                    case "nonconsumable" -> {
-                        String query2 = "SELECT days_after_change FROM nonconsumable WHERE id = ?";
-                        PreparedStatement statement1 = connection.prepareStatement(query2);
-                        statement1.setLong(1, id);
-                        ResultSet result1 = statement1.executeQuery();
-                        double days_after_change = 0.0;
-                        if (result1.next()) {
-                            days_after_change = result.getDouble("days_after_change");
-                        }
-
-                        equipment = new NonConsumable(name, price, buy_date, days_after_change);
-                    }
-                }
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return equipment;
     }
 
     public void insertEquipment(Equipment equipment) {
@@ -295,4 +154,19 @@ public class AdministratorRepo {
             }
         }
     }
+
+    public void updateEmployeeSalary(String criteria, String value, double newSalary) {
+        String query = "UPDATE employees SET salary = ? WHERE " + criteria + " " + value;
+        Connection connection = DBConfig.getDatabaseConnection();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setDouble(1, newSalary);
+            statement.execute();
+            System.out.println("Salary updated with value " + newSalary);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
 }

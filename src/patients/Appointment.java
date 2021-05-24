@@ -58,6 +58,10 @@ public class Appointment {
         return new Doctor(doctor);
     }
 
+    public long getID() {
+        return ID;
+    }
+
     @Override
     public String toString() {
         return "Appointment" +

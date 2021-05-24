@@ -181,6 +181,6 @@ public class Patient implements Comparable<Patient> {
 
     @Override
     public int compareTo(Patient o) {
-        return this.getLastName().compareTo(o.getLastName());
+        return Long.compare(this.getID(), o.getID());
     }
 }

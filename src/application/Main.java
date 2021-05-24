@@ -21,8 +21,6 @@ import utilities.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.TreeSet;
 
 import static employees.utils.Specialization.*;
 
@@ -42,12 +40,12 @@ public class Main {
         DatabaseOperations.initializeDatabase();
 
         // adding the patients from csv to database
-        ReceptionistRepo receptionistRepo = new ReceptionistRepo();
+        ReceptionistRepo receptionistRepo = ReceptionistRepo.getInstance();
         for (Patient patient : Clinic.getInstance().getPatients()) {
             receptionistRepo.insertPatient(patient);
         }
 
-        AdministratorRepo administratorRepo = new AdministratorRepo();
+        AdministratorRepo administratorRepo = AdministratorRepo.getInstance();
         for (Employee employee : Clinic.getInstance().getEmployees()) {
             administratorRepo.insertEmployee(employee);
         }
@@ -253,7 +251,7 @@ public class Main {
         receptionistService.addAppointment(patient, appointment);
         receptionistService.addAppointment(patient, appointment1);
 
-        receptionistService.cancelAppointment(patient, appointment);
+//        receptionistService.cancelAppointment(patient, appointment);
 
         receptionistService.showDoctorsBySpecialization(ANESTHESIOLOGY);
         receptionistService.showDoctorsBySpecialization(PEDIATRICS);
@@ -409,11 +407,23 @@ public class Main {
         Patient patient1 = receptionistRepo.selectPatientById(3);
         System.out.println(patient1);
 
-        var patients = receptionistRepo.selectPatientsWithCriteria("last_name", "Blue");
+        var patients = receptionistRepo.selectPatientsByCriteria("last_name", "Blue");
         System.out.println(patients);
 
-        patients = receptionistRepo.selectPatientsWithCriteria("sex", "F");
+        patients = receptionistRepo.selectPatientsByCriteria("sex", "F");
         System.out.println(patients);
+
+        System.out.println();
+
+        var selectedEmployees = receptionistRepo.selectEmployeesByCriteria("age", "> 30");
+        System.out.println(selectedEmployees.size());
+
+        selectedEmployees = receptionistRepo.selectEmployeesByCriteria("experience", "<= 3");
+        System.out.println(selectedEmployees.size());
+
+        for (Appointment appointment2 : patient.getAppointments()) {
+            receptionistRepo.insertAppointment(appointment2);
+        }
 
 //        receptionistRepo.deletePatientById(3);
 

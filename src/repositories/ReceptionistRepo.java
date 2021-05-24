@@ -1,15 +1,30 @@
 package repositories;
 
+import clinic.Clinic;
 import database.DBConfig;
+import employees.Receptionist;
+import patients.Appointment;
 import patients.Patient;
+import utilities.Date;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.TreeSet;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
-public class ReceptionistRepo {
+public class ReceptionistRepo extends CommonRepo {
+
+    private static ReceptionistRepo instance;
+
+    private ReceptionistRepo() {}
+
+    public static ReceptionistRepo getInstance() {
+        if (instance == null) {
+            instance = new ReceptionistRepo();
+        }
+        return instance;
+    }
 
     public void insertPatient(Patient patient) {
         if (patient != null) {
@@ -40,48 +55,6 @@ public class ReceptionistRepo {
         }
     }
 
-    public Patient selectPatientById(long id) {
-        String query = "SELECT * FROM patient WHERE id = ?";
-        Connection connection = DBConfig.getDatabaseConnection();
-        Patient patient = null;
-
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setLong(1, id);
-            ResultSet result = statement.executeQuery();
-
-            if (result.next()) {
-                patient = getDatabasePatient(result);
-            }
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return patient;
-    }
-
-    public TreeSet<Patient> selectPatientsWithCriteria(String criteria, String value) {
-        String query = "SELECT * FROM patient WHERE " + criteria + " = ?";
-        Connection connection = DBConfig.getDatabaseConnection();
-        TreeSet<Patient> patients = new TreeSet<>();
-
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, value);
-            ResultSet result = statement.executeQuery();
-
-            while (result.next()) {
-                Patient patient = getDatabasePatient(result);
-                patients.add(patient);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return patients;
-    }
-
     public void deletePatientById(long id) {
         String query = "DELETE FROM patient WHERE id = ?";
         Connection connection = DBConfig.getDatabaseConnection();
@@ -95,23 +68,55 @@ public class ReceptionistRepo {
         }
     }
 
-    private Patient getDatabasePatient(ResultSet result) throws SQLException{
-        if (result != null) {
-            long id = result.getInt("id");
-            String first_name = result.getString("first_name");
-            String last_name = result.getString("last_name");
-            String SSN = result.getString("ssn");
-            int age = result.getInt("age");
-            char sex = result.getString("sex").charAt(0);
-            int height = result.getInt("height");
-            double weight = result.getDouble("weight");
-            double debt = result.getDouble("debt");
+    public void insertAppointment(Appointment appointment) {
+        if (appointment != null) {
+            Appointment dbAppointment = selectAppointmentById(appointment.getID());
 
-            Patient patient = new Patient(first_name, last_name, SSN, age, sex, height, weight);
-            patient.setID(id);
-            patient.setDebt(debt);
-            return patient;
+            if (dbAppointment != null) {
+                return;
+            }
+
+            String query = "INSERT INTO appointment VALUES(?, ?, ?, ?)";
+            Connection connection = DBConfig.getDatabaseConnection();
+
+            var patients = Clinic.getInstance().getPatients();
+            int index = -1;
+            Patient patient = null;
+            for (Patient p : patients) {
+                index = p.getAppointments().indexOf(appointment);
+                if (index >= 0) {
+                    patient = p;
+                    break;
+                }
+            }
+            System.out.println("ok");
+            if (index >= 0) {
+                try {
+                    System.out.println("ok");
+                    String appointmentDate = appointment.getDate().getFullDate() + " " + appointment.getTime();
+                    appointmentDate = appointmentDate.replace("/", "-");
+
+                    System.out.println("appointment date:" + appointmentDate);
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    java.util.Date parsedDate = dateFormat.parse(appointmentDate);
+                    String formattedDate = dateFormat.format(parsedDate);
+
+                    PreparedStatement statement = connection.prepareStatement(query);
+                    statement.setLong(1, appointment.getID());
+                    statement.setString(2, formattedDate);
+                    statement.setLong(3, appointment.getDoctor().getID());
+                    statement.setLong(4, patient.getID());
+                    statement.execute();
+
+                } catch (SQLException | ParseException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
         }
-        return null;
+    }
+
+    public void deleteAppointment() {
+        // TODO
     }
 }
