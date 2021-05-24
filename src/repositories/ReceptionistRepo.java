@@ -2,14 +2,13 @@ package repositories;
 
 import clinic.Clinic;
 import database.DBConfig;
-import employees.Receptionist;
 import patients.Appointment;
 import patients.Patient;
-import utilities.Date;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -89,14 +88,11 @@ public class ReceptionistRepo extends CommonRepo {
                     break;
                 }
             }
-            System.out.println("ok");
+
             if (index >= 0) {
                 try {
-                    System.out.println("ok");
                     String appointmentDate = appointment.getDate().getFullDate() + " " + appointment.getTime();
                     appointmentDate = appointmentDate.replace("/", "-");
-
-                    System.out.println("appointment date:" + appointmentDate);
 
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                     java.util.Date parsedDate = dateFormat.parse(appointmentDate);
@@ -116,7 +112,16 @@ public class ReceptionistRepo extends CommonRepo {
         }
     }
 
-    public void deleteAppointment() {
-        // TODO
+    public void deleteAppointment(String criteria) {
+        String query = "DELETE FROM appointment WHERE " + criteria;
+        Connection connection = DBConfig.getDatabaseConnection();
+
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

@@ -425,7 +425,13 @@ public class Main {
             receptionistRepo.insertAppointment(appointment2);
         }
 
-//        receptionistRepo.deletePatientById(3);
+        receptionistRepo.deleteAppointment("date_time LIKE '2021%'");
+        receptionistRepo.deleteAppointment("doctor_id = 7");
+
+        administratorRepo.deleteEmployeeById(7);
+        receptionistRepo.deletePatientById(3);
+
+        administratorRepo.deleteMedicine("producer LIKE 'Ba%'");
 
         saveData();
     }

@@ -88,7 +88,7 @@ public class AdministratorService extends EmployeesService {
             salary += salary * percentage;
             employee.setSalary(salary);
             employee.getNotifications().add("Raised salary by " + percentage * 100 + "%");
-            AdministratorRepo.getInstance().updateEmployeeSalary("id", " = " + employee.getID(), salary);
+            AdministratorRepo.getInstance().updateEmployeeSalary("id = " + employee.getID(), salary);
         }
     }
 

@@ -1,5 +1,6 @@
 package repositories;
 
+import clinic.Administrator;
 import database.DBConfig;
 import employees.Doctor;
 import employees.Employee;
@@ -155,18 +156,56 @@ public class AdministratorRepo extends CommonRepo {
         }
     }
 
-    public void updateEmployeeSalary(String criteria, String value, double newSalary) {
-        String query = "UPDATE employees SET salary = ? WHERE " + criteria + " " + value;
+    public void updateEmployeeSalary(String criteria, double newSalary) {
+        String query = "UPDATE employees SET salary = ? WHERE " + criteria;
         Connection connection = DBConfig.getDatabaseConnection();
 
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setDouble(1, newSalary);
             statement.execute();
-            System.out.println("Salary updated with value " + newSalary);
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
+    public void deleteEmployeeById(long id) {
+        if (id == Administrator.getInstance().getID()) {
+            return;
+        }
+
+        Connection connection = DBConfig.getDatabaseConnection();
+
+        try {
+            Employee dbEmployee = selectEmployeeById(id);
+            if (dbEmployee instanceof Doctor) {
+                String query = "DELETE FROM doctor WHERE id = ?";
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setLong(1, id);
+                statement.execute();
+            }
+
+            String query = "DELETE FROM employees WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setLong(1, id);
+            statement.execute();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void deleteMedicine(String criteria) {
+        String query = "DELETE FROM medicine WHERE " + criteria;
+        Connection connection = DBConfig.getDatabaseConnection();
+
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 }
