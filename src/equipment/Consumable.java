@@ -10,10 +10,10 @@ public class Consumable extends Equipment {
     private final int numberOfItemsInPackage;
     private final double averageDaysItLasts;
 
-    public Consumable(String name, double price, int number, Date buyDate, double days) {
+    public Consumable(String name, double price, int itemsInPack, Date buyDate, double lastingDays) {
         super(name, price, buyDate);
-        this.numberOfItemsInPackage = number;
-        this.averageDaysItLasts = days;
+        this.numberOfItemsInPackage = itemsInPack;
+        this.averageDaysItLasts = lastingDays;
     }
 
     public double getAverageDaysItLasts() {

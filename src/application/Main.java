@@ -10,6 +10,7 @@ import employees.Receptionist;
 import employees.utils.cmpDoctorsByNameSpec;
 import employees.utils.cmpDoctorsBySpecName;
 import employees.utils.cmpName;
+import equipment.Equipment;
 import patients.*;
 import patients.utils.cmpMedicineNameSubst;
 import patients.utils.cmpMedicineSubstName;
@@ -49,6 +50,14 @@ public class Main {
         AdministratorRepo administratorRepo = new AdministratorRepo();
         for (Employee employee : Clinic.getInstance().getEmployees()) {
             administratorRepo.insertEmployee(employee);
+        }
+
+        for (Medicine medicine : Clinic.getInstance().getMedicines()) {
+            administratorRepo.insertMedicine(medicine);
+        }
+
+        for (Equipment equipment : Clinic.getInstance().getEquipment()) {
+            administratorRepo.insertEquipment(equipment);
         }
 
         System.out.println(GREEN_BACKGROUND + BLACK + "========== CLINIC INFORMATION ========================" + RESET);

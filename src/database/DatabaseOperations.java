@@ -20,6 +20,19 @@ public class DatabaseOperations {
         }
     }
 
+    public static void drop() {
+        Connection connection = DBConfig.getDatabaseConnection();
+
+        String query = "{CALL drop_tables()}";
+
+        try {
+            CallableStatement callableStatement = connection.prepareCall(query);
+            callableStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void initializeDatabase() {
         createAllTables();
     }

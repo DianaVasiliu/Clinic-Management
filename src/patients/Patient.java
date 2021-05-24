@@ -176,7 +176,7 @@ public class Patient implements Comparable<Patient> {
                 ", sex=" + sex +
                 ", height=" + height +
                 ", weight=" + weight +
-                '}';
+                "}";
     }
 
     @Override
