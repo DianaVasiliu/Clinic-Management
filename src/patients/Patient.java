@@ -55,8 +55,7 @@ public class Patient implements Comparable<Patient> {
     }
 
     {
-        noOfPatients++;
-        this.ID = noOfPatients;
+        this.ID = ++noOfPatients;
     }
 
     /* setters & getters */

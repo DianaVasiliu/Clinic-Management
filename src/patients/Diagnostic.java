@@ -13,8 +13,7 @@ public class Diagnostic {
     private Date date;
 
     {
-        noOfDiagnostics++;
-        ID = noOfDiagnostics;
+        this.ID = ++noOfDiagnostics;
     }
 
     public Diagnostic(String description, ArrayList<Medicine> treatment, Date date) {
@@ -45,6 +44,14 @@ public class Diagnostic {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public long getID() {
+        return ID;
+    }
+
+    public void setID(long ID) {
+        this.ID = ID;
     }
 
     @Override

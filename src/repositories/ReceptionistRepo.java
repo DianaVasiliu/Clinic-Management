@@ -25,6 +25,8 @@ public class ReceptionistRepo extends CommonRepo {
         return instance;
     }
 
+    /* database operations */
+
     public void insertPatient(Patient patient) {
         if (patient != null) {
             Patient dbPatient = selectPatientById(patient.getID());

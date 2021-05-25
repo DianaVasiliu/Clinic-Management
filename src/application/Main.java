@@ -416,10 +416,10 @@ public class Main {
         System.out.println();
 
         var selectedEmployees = receptionistRepo.selectEmployeesByCriteria("age", "> 30");
-        System.out.println(selectedEmployees.size());
+        System.out.println("Number of employees with age > 30 : " + selectedEmployees.size());
 
         selectedEmployees = receptionistRepo.selectEmployeesByCriteria("experience", "<= 3");
-        System.out.println(selectedEmployees.size());
+        System.out.println("Number of employees with experience <= 3 : " + selectedEmployees.size());
 
         for (Appointment appointment2 : patient.getAppointments()) {
             receptionistRepo.insertAppointment(appointment2);

@@ -13,8 +13,7 @@ public class Appointment {
     private String time;
 
     {
-        noOfAppointments++;
-        ID = noOfAppointments;
+        this.ID = ++noOfAppointments;
     }
 
     public Appointment(Date date, String time, Doctor doctor) {

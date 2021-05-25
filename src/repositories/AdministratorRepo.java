@@ -10,6 +10,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import employees.Nurse;
+import employees.Receptionist;
 import equipment.Consumable;
 import equipment.Electronic;
 import equipment.Equipment;
@@ -28,6 +30,8 @@ public class AdministratorRepo extends CommonRepo {
         }
         return instance;
     }
+
+    /* database operations */
 
     public void insertEmployee(Employee employee) {
         if (employee != null) {
@@ -55,8 +59,22 @@ public class AdministratorRepo extends CommonRepo {
                 statement.setDouble(7, employee.getSalary());
                 statement.setInt(8, employee.getExperience());
                 statement.setInt(9, employee.getDaysWorked());
-                statement.setDouble(10, Employee.getSalaryPerHour());
-                statement.setInt(11, Employee.getHoursPerDay());
+                if (employee instanceof Doctor) {
+                    statement.setDouble(10, Doctor.getSalaryPerHour());
+                    statement.setInt(11, Doctor.getHoursPerDay());
+                }
+                else if (employee instanceof Nurse) {
+                    statement.setDouble(10, Nurse.getSalaryPerHour());
+                    statement.setInt(11, Nurse.getHoursPerDay());
+                }
+                else if (employee instanceof Receptionist) {
+                    statement.setDouble(10, Receptionist.getSalaryPerHour());
+                    statement.setInt(11, Receptionist.getHoursPerDay());
+                }
+                else {
+                    statement.setDouble(10, 0);
+                    statement.setInt(11, 0);
+                }
                 statement.setString(12, emp_type);
                 statement.execute();
 

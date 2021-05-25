@@ -21,7 +21,7 @@ import java.util.TreeSet;
 
 public abstract class CommonRepo {
 
-    private static CommonRepo instance;
+    /* database operations */
 
     public Employee selectEmployeeById(long id) {
         String query = "SELECT * FROM employees WHERE id = ?";

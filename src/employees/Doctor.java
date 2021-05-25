@@ -11,6 +11,8 @@ import java.util.HashMap;
 public class Doctor extends Employee {
 
     private Specialization specialization;
+    private static final double salaryPerHour;
+    private static final int hoursPerDay;
 
     static {
         salaryPerHour = 21.7;
@@ -68,6 +70,14 @@ public class Doctor extends Employee {
         else {
             this.specialization = Specialization.UNKNOWN;
         }
+    }
+
+    public static int getHoursPerDay() {
+        return hoursPerDay;
+    }
+
+    public static double getSalaryPerHour() {
+        return salaryPerHour;
     }
 
     @Override

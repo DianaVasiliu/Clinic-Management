@@ -15,11 +15,13 @@ public abstract class Employee implements Comparable<Employee> {
     protected double salary;
     protected int experience;
     protected int daysWorked;
-    protected static double salaryPerHour;
-    protected static int hoursPerDay;
     private long ID;
     private ArrayList<String> notifications = new ArrayList<>();
     public static long noOfEmployees;
+
+    {
+        this.ID = ++noOfEmployees;
+    }
 
     public Employee(String firstName, String lastName, Date birthday, char sex, int experience) {
         setFirstName(firstName);
@@ -51,11 +53,6 @@ public abstract class Employee implements Comparable<Employee> {
             this.notifications = new ArrayList<>(employee.notifications);
             this.ID = employee.ID;
         }
-    }
-
-    {
-        noOfEmployees++;
-        this.ID = noOfEmployees;
     }
 
     public abstract double calculateSalary();
@@ -156,14 +153,6 @@ public abstract class Employee implements Comparable<Employee> {
 
     public long getID() {
         return ID;
-    }
-
-    public static double getSalaryPerHour() {
-        return salaryPerHour;
-    }
-
-    public static int getHoursPerDay() {
-        return hoursPerDay;
     }
 
     public ArrayList<String> getNotifications() {

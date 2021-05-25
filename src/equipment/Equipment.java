@@ -11,8 +11,7 @@ public abstract class Equipment {
     protected Date buyDate;
 
     {
-        noOfEquipment++;
-        ID = noOfEquipment;
+        this.ID = ++noOfEquipment;
     }
 
     public Equipment(String name, double price, Date buyDate) {
@@ -39,6 +38,10 @@ public abstract class Equipment {
 
     public void setBuyDate(Date buyDate) {
         this.buyDate = new Date(buyDate);
+    }
+
+    public void setID(long ID) {
+        this.ID = ID;
     }
 
     public double getPrice() {

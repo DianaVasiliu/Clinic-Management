@@ -10,8 +10,7 @@ public class Medicine {
     private static int noOfMedicine;
 
     {
-        noOfMedicine++;
-        this.ID = noOfMedicine;
+        this.ID = ++noOfMedicine;
     }
 
     public Medicine(String name, String producer, double price, String activeSubstance) {
