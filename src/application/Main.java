@@ -2,6 +2,7 @@ package application;
 
 import clinic.Administrator;
 import clinic.Clinic;
+import database.DBConfig;
 import database.DatabaseOperations;
 import employees.Doctor;
 import employees.Employee;
@@ -434,6 +435,7 @@ public class Main {
         administratorRepo.updateEquipment("buy_date = '2020-10-10'", "price", "price * 1.1");
         administratorRepo.updateEquipment("eq_type = 'nonconsumable'", "name", "UPPER(name)");
 
+        DBConfig.closeDatabaseConnection();
 //        saveData();
     }
 
