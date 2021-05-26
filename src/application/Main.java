@@ -10,7 +10,6 @@ import employees.Receptionist;
 import employees.utils.cmpDoctorsByNameSpec;
 import employees.utils.cmpDoctorsBySpecName;
 import employees.utils.cmpName;
-import equipment.Equipment;
 import patients.*;
 import patients.utils.cmpMedicineNameSubst;
 import patients.utils.cmpMedicineSubstName;
@@ -33,30 +32,14 @@ public class Main {
         final String BLUE = "\u001B[34m";
         final String RESET = "\u001B[0m";
 
-        // Read data from .csv
-        readData();
-
         // database creation
         DatabaseOperations.initializeDatabase();
 
-        // adding the patients from csv to database
+        // Read data from .csv
+        readData();
+
         ReceptionistRepo receptionistRepo = ReceptionistRepo.getInstance();
-        for (Patient patient : Clinic.getInstance().getPatients()) {
-            receptionistRepo.insertPatient(patient);
-        }
-
         AdministratorRepo administratorRepo = AdministratorRepo.getInstance();
-        for (Employee employee : Clinic.getInstance().getEmployees()) {
-            administratorRepo.insertEmployee(employee);
-        }
-
-        for (Medicine medicine : Clinic.getInstance().getMedicines()) {
-            administratorRepo.insertMedicine(medicine);
-        }
-
-        for (Equipment equipment : Clinic.getInstance().getEquipment()) {
-            administratorRepo.insertEquipment(equipment);
-        }
 
         System.out.println(GREEN_BACKGROUND + BLACK + "========== CLINIC INFORMATION ========================" + RESET);
 
@@ -88,7 +71,10 @@ public class Main {
         administrator.setFirstName("Diana");
         administrator.setLastName("Gunter");
         administrator.setSex('F');
-        administrator.setBirthday(new Date(6, 9, 2001));
+        administrator.setBirthday(new Date(6, 9, 1993));
+        administrator.setExperience(1);
+        administrator.setDaysWorked(27);
+        administrator.setSalary(administrator.calculateSalary());
         clinic.setName("Gunter's Clinic");
         System.out.println("Admin changed. The new admin is:\t" + administrator);
         System.out.println(clinic);
@@ -114,7 +100,7 @@ public class Main {
 
         System.out.println("Doctor " + doctor.getFirstName() + " " + doctor.getLastName() +
                 " is specialized in " + doctor.getSpecialization());
-        doctor.setSpecialization(GYNECOLOGY);
+        doctor.setSpecialization(OPHTALMOLOGY);
         System.out.println((doctor.getSex() == 'M' ? "He" : "She") +
                 " changed specialization... The new one is " + doctor.getSpecialization());
 
@@ -238,7 +224,7 @@ public class Main {
         System.out.println("\n");
 
         // Appointments
-        Appointment appointment = new Appointment(new Date(9, 10, 2020), "12:00", doctor);
+        Appointment appointment = new Appointment(new Date(9, 10, 2020), "11:00", doctor);
         Appointment appointment1 = new Appointment(new Date(7, 8, 2020), "16:00", doctor1);
 
         System.out.println(GREEN_BACKGROUND + BLACK + "========== RECEPTIONIST STUFF ========================" + RESET);
@@ -251,7 +237,17 @@ public class Main {
         receptionistService.addAppointment(patient, appointment);
         receptionistService.addAppointment(patient, appointment1);
 
-//        receptionistService.cancelAppointment(patient, appointment);
+        Appointment appointment2 = new Appointment(new Date(30, 5, 2021),"18:00", doctor1);
+        receptionistService.addAppointment(patient, appointment2);
+
+        System.out.println(appointment.getID());
+        System.out.println(appointment1.getID());
+        System.out.println(appointment2.getID());
+
+        System.out.println("Appointments:");
+        for (Appointment a:patient.getAppointments()) {
+            System.out.println(a);
+        }
 
         receptionistService.showDoctorsBySpecialization(ANESTHESIOLOGY);
         receptionistService.showDoctorsBySpecialization(PEDIATRICS);
@@ -392,10 +388,12 @@ public class Main {
 
         System.out.println(GREEN_BACKGROUND + BLACK + "========== PAYING DEBT ========================" + RESET);
 
-        receptionistService.addAppointment(patient, new Appointment(new Date(LocalDate.now().getDayOfMonth(), LocalDate.now().getMonthValue(), LocalDate.now().getYear()), "12:00", doctor));
+        receptionistService.addAppointment(patient, new Appointment(
+                new Date(LocalDate.now().getDayOfMonth(), LocalDate.now().getMonthValue(), LocalDate.now().getYear()),
+                "09:00", doctor));
 
         System.out.println(patient.getDebt());
-        patientService.pay(patient, patient.getDebt());
+        patientService.pay(patient, 10);
         System.out.println(patient.getDebt());
 
         System.out.println(GREEN_BACKGROUND + BLACK + "========== CALCULATING PROFIT ========================" + RESET);
@@ -421,19 +419,22 @@ public class Main {
         selectedEmployees = receptionistRepo.selectEmployeesByCriteria("experience", "<= 3");
         System.out.println("Number of employees with experience <= 3 : " + selectedEmployees.size());
 
-        for (Appointment appointment2 : patient.getAppointments()) {
-            receptionistRepo.insertAppointment(appointment2);
-        }
+        receptionistService.cancelAppointment(patient, appointment);
 
-        receptionistRepo.deleteAppointment("date_time LIKE '2021%'");
-        receptionistRepo.deleteAppointment("doctor_id = 7");
+        receptionistRepo.updateAppointment("id = 2", "date_time", "07/08/2020 13:20");
 
+        receptionistRepo.deleteAppointment("date_time LIKE '2020%'");
         administratorRepo.deleteEmployeeById(7);
-        receptionistRepo.deletePatientById(3);
+
+        receptionistRepo.deleteAppointment("doctor_id = 7");
+        receptionistRepo.deletePatientById(6);
 
         administratorRepo.deleteMedicine("producer LIKE 'Ba%'");
 
-        saveData();
+        administratorRepo.updateEquipment("buy_date = '2020-10-10'", "price", "price * 1.1");
+        administratorRepo.updateEquipment("eq_type = 'nonconsumable'", "name", "UPPER(name)");
+
+//        saveData();
     }
 
     private static void readData() {

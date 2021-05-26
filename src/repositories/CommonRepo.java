@@ -46,6 +46,26 @@ public abstract class CommonRepo {
         return employee;
     }
 
+    public TreeSet<Employee> selectEmployeesByCriteria(String criteria, String value) {
+        String query = "SELECT * FROM employees WHERE " + criteria + " " + value;
+        Connection connection = DBConfig.getDatabaseConnection();
+        TreeSet<Employee> employees = new TreeSet<>();
+
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(query);
+
+            while (result.next()) {
+                Employee employee = getDatabaseEmployee(result);
+                employees.add(employee);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return employees;
+    }
+
     public Medicine selectMedicineById(long id) {
         String query = "SELECT * FROM medicine WHERE id = ?";
         Connection connection = DBConfig.getDatabaseConnection();
@@ -137,6 +157,41 @@ public abstract class CommonRepo {
         return equipment;
     }
 
+    public Appointment selectAppointmentById(long id) {
+        String query = "SELECT * FROM appointment WHERE id = ?";
+        Connection connection = DBConfig.getDatabaseConnection();
+        Appointment appointment = null;
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                String date = resultSet.getString("date_time");
+                long doctor_id = resultSet.getLong("doctor_id");
+                long patient_id = resultSet.getLong("patient_id");
+                Date appointmentDate = new Date(
+                        Integer.parseInt(date.split("-")[2].split(" ")[0]),
+                        Integer.parseInt(date.split("-")[1]),
+                        Integer.parseInt(date.split("-")[0]));
+                String appointmentTime = date.split(" ")[1];
+
+                Doctor appointmentDoctor = (Doctor) selectEmployeeById(doctor_id);
+                Patient appointmentPatient = selectPatientById(patient_id);
+
+                appointment = new Appointment(appointmentDate, appointmentTime, appointmentDoctor);
+                appointment.setID(id);
+                Appointment.decreaseNoOfAppointments();
+                appointmentPatient.getAppointments().add(appointment);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return appointment;
+    }
+
     public Patient selectPatientById(long id) {
         String query = "SELECT * FROM patient WHERE id = ?";
         Connection connection = DBConfig.getDatabaseConnection();
@@ -156,39 +211,6 @@ public abstract class CommonRepo {
         }
 
         return patient;
-    }
-
-    public Appointment selectAppointmentById(long id) {
-        String query = "SELECT * FROM appointment WHERE id = ?";
-        Connection connection = DBConfig.getDatabaseConnection();
-        Appointment appointment = null;
-
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setLong(1, id);;
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                String date = resultSet.getString("date_time");
-                long doctor_id = resultSet.getLong("doctor_id");
-                long patient_id = resultSet.getLong("patient_id");
-                Date appointmentDate = new Date(
-                        Integer.parseInt(date.split("-")[2].split(" ")[0]),
-                        Integer.parseInt(date.split("-")[1]),
-                        Integer.parseInt(date.split("-")[0]));
-                String appointmentTime = date.split(" ")[1];
-
-                Doctor appointmentDoctor = (Doctor) selectEmployeeById(doctor_id);
-                Patient appointmentPatient = selectPatientById(patient_id);
-
-                appointment = new Appointment(appointmentDate, appointmentTime, appointmentDoctor);
-                appointmentPatient.getAppointments().add(appointment);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return appointment;
     }
 
     public TreeSet<Patient> selectPatientsByCriteria(String criteria, String value) {
@@ -212,25 +234,7 @@ public abstract class CommonRepo {
         return patients;
     }
 
-    public TreeSet<Employee> selectEmployeesByCriteria(String criteria, String value) {
-        String query = "SELECT * FROM employees WHERE " + criteria + " " + value;
-        Connection connection = DBConfig.getDatabaseConnection();
-        TreeSet<Employee> employees = new TreeSet<>();
-
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(query);
-
-            while (result.next()) {
-                Employee employee = getDatabaseEmployee(result);
-                employees.add(employee);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        return employees;
-    }
+    /* utils */
 
     private Patient getDatabasePatient(ResultSet result) throws SQLException{
         if (result != null) {

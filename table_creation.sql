@@ -25,9 +25,9 @@ CREATE TABLE IF NOT EXISTS employees (
 	CONSTRAINT emp_daysWorked_check
 		CHECK (days_worked >= 0),
 	CONSTRAINT emp_salaryPerHour_check
-		CHECK (salary_per_hour > 0),
+		CHECK (salary_per_hour >= 0),
 	CONSTRAINT emp_hoursPerDay_check
-		CHECK (hours_per_day > 0),
+		CHECK (hours_per_day >= 0),
 	CONSTRAINT emp_empType_check
 		CHECK (emp_type IN ('doctor', 'nurse', 'receptionist', 'administrator'))
 );
@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS doctor (
     CONSTRAINT doctor_emp_fk
 		FOREIGN KEY (id) 
         REFERENCES employees(id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS equipment (
@@ -59,14 +60,22 @@ CREATE TABLE IF NOT EXISTS consumable (
 	CONSTRAINT consumable_itemsInPackage_check
 		CHECK (items_in_package > 0),
 	CONSTRAINT consumable_avgLastTime_check
-		CHECK (avg_last_time > 0)        
+		CHECK (avg_last_time > 0),
+	CONSTRAINT fk_consumable_equipment
+		FOREIGN KEY (id)
+        REFERENCES equipment(id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS nonconsumable (
 	id					INTEGER PRIMARY KEY,
     days_after_change	DOUBLE,
 	CONSTRAINT nonconsumable_daysAfterChange_check
-		CHECK (days_after_change >= 0)
+		CHECK (days_after_change >= 0),
+	CONSTRAINT fk_nonconsumable_equipment
+		FOREIGN KEY (id)
+        REFERENCES equipment(id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS electronic (
@@ -76,7 +85,11 @@ CREATE TABLE IF NOT EXISTS electronic (
 	CONSTRAINT electronic_watts_check
 		CHECK (watts_per_hour >= 0),
 	CONSTRAINT electronic_hoursUsed_check
-		CHECK (hours_used >= 0)
+		CHECK (hours_used >= 0),
+	CONSTRAINT fk_electronic_equipment
+		FOREIGN KEY (id)
+        REFERENCES equipment(id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS patient (
@@ -87,7 +100,7 @@ CREATE TABLE IF NOT EXISTS patient (
     age				INTEGER,
     sex				CHAR(1),
     height			INTEGER,
-    weight			DOUBLE,
+    weight			DOUBLE,	
     debt			DOUBLE DEFAULT 0,
     CONSTRAINT patient_ssn_check
 		CHECK (length(ssn) = 11),
@@ -98,9 +111,7 @@ CREATE TABLE IF NOT EXISTS patient (
 	CONSTRAINT patient_height_check
 		CHECK (height > 0 AND height < 250),
 	CONSTRAINT patient_weight_check
-		CHECK (weight > 0 AND weight < 400),
-	CONSTRAINT patient_debt_check
-		CHECK (debt >= 0)
+		CHECK (weight > 0 AND weight < 400)
 );
 
 CREATE TABLE IF NOT EXISTS appointment (
@@ -110,10 +121,12 @@ CREATE TABLE IF NOT EXISTS appointment (
     patient_id	INTEGER NOT NULL,
     CONSTRAINT appointment_doctorid_fk
 		FOREIGN KEY (doctor_id)
-        REFERENCES doctor(id),
+        REFERENCES doctor(id)
+        ON DELETE CASCADE,
     CONSTRAINT appointment_patientid_fk
 		FOREIGN KEY (patient_id)
         REFERENCES patient(id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS diagnostic (

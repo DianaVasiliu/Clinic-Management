@@ -6,11 +6,11 @@ import utilities.LoggingCSV;
 public class Administrator extends Employee {
 
     private static Administrator administrator;
-    private static final double costPerHour;
+    private static final double salaryPerHour;
     protected static final int hoursPerDay;
 
     static {
-        costPerHour = 10;
+        salaryPerHour = 10;
         hoursPerDay = 6;
     }
 
@@ -20,7 +20,7 @@ public class Administrator extends Employee {
     @Override
     public double calculateSalary() {
         LoggingCSV.log("Calculating salary for administrator");
-        double salary = this.getDaysWorked() * costPerHour * hoursPerDay;
+        double salary = this.getDaysWorked() * salaryPerHour * hoursPerDay;
         double bonus = salary * (5 + experience) / 100;
         salary += bonus;
         return salary;
@@ -31,6 +31,14 @@ public class Administrator extends Employee {
             administrator = new Administrator();
         }
         return administrator;
+    }
+
+    public static double getSalaryPerHour() {
+        return salaryPerHour;
+    }
+
+    public static int getHoursPerDay() {
+        return hoursPerDay;
     }
 
     public String toString() {

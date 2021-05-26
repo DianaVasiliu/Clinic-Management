@@ -4,6 +4,7 @@ import clinic.Clinic;
 import employees.utils.Specialization;
 import patients.Appointment;
 import patients.Patient;
+import repositories.ReceptionistRepo;
 import utilities.LoggingCSV;
 
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class ReceptionistService extends EmployeesService {
             Specialization spec = appointment.getDoctor().getSpecialization();
             double price = spec.getConsultationPrice();
             changePatientDebt(patient, price);
+
+            ReceptionistRepo.getInstance().insertAppointment(appointment);
         }
     }
 
@@ -39,6 +42,8 @@ public class ReceptionistService extends EmployeesService {
                 Specialization spec = appointment.getDoctor().getSpecialization();
                 double price = spec.getConsultationPrice();
                 changePatientDebt(patient, -price);
+
+                ReceptionistRepo.getInstance().deleteAppointment("id = " + appointment.getID());
             }
             else {
                 System.err.println("Patient does not have this appointment");
@@ -67,6 +72,7 @@ public class ReceptionistService extends EmployeesService {
             }
             if (ok) {
                 patients.add(patient);
+                ReceptionistRepo.getInstance().insertPatient(patient);
             }
             else {
                 System.out.println("Patient already exists");

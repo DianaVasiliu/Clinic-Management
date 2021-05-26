@@ -1,5 +1,6 @@
 package employees;
 
+import repositories.AdministratorRepo;
 import services.AdministratorService;
 import utilities.Date;
 import employees.utils.Specialization;
@@ -70,6 +71,7 @@ public class Doctor extends Employee {
         else {
             this.specialization = Specialization.UNKNOWN;
         }
+        AdministratorRepo.getInstance().updateDoctor(this.getID(), this.specialization.toString());
     }
 
     public static int getHoursPerDay() {

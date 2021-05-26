@@ -1,17 +1,29 @@
 DELIMITER //
 CREATE PROCEDURE drop_tables()
 BEGIN
-    DROP TABLE appointment;
+    TRUNCATE TABLE consumable;
+    TRUNCATE TABLE electronic;
+    TRUNCATE TABLE nonconsumable;
+    TRUNCATE TABLE equipment;    
+	TRUNCATE TABLE appointment; 
+    TRUNCATE TABLE diagnostic;
+    TRUNCATE TABLE medicine;
+    TRUNCATE TABLE treatment;
+    TRUNCATE TABLE doctor;
+    TRUNCATE TABLE employees;
+    TRUNCATE TABLE patient;
+    
     DROP TABLE consumable;
-    DROP TABLE diagnostic;
-    DROP TABLE doctor;
     DROP TABLE electronic;
-    DROP TABLE employees;
-    DROP TABLE equipment;
-    DROP TABLE medicine;
     DROP TABLE nonconsumable;
-    DROP TABLE patient;
+    DROP TABLE equipment;    
+	DROP TABLE appointment; 
+    DROP TABLE diagnostic;
+    DROP TABLE medicine;
     DROP TABLE treatment;
+    DROP TABLE doctor;
+    DROP TABLE employees;
+    DROP TABLE patient;
 END
 //
 DELIMITER ;

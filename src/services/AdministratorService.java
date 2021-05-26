@@ -44,6 +44,7 @@ public class AdministratorService extends EmployeesService {
         else if (employee instanceof Receptionist) {
             clinic.getReceptionists().add((Receptionist) employee);
         }
+        AdministratorRepo.getInstance().insertEmployee(employee);
     }
 
     public ArrayList<Employee> getAllEmployees() {
@@ -59,6 +60,7 @@ public class AdministratorService extends EmployeesService {
         LoggingCSV.log("Adding new medicine");
         Clinic clinic = Clinic.getInstance();
         clinic.getMedicines().add(medicine);
+        AdministratorRepo.getInstance().insertMedicine(medicine);
     }
 
     public void addEquipment(Equipment equipment) {
@@ -66,6 +68,7 @@ public class AdministratorService extends EmployeesService {
             LoggingCSV.log("Adding new equipment");
             Clinic clinic = Clinic.getInstance();
             clinic.getEquipment().add(equipment);
+            AdministratorRepo.getInstance().insertEquipment(equipment);
         }
     }
 

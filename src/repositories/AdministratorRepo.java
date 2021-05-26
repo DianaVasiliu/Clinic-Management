@@ -6,9 +6,6 @@ import employees.Doctor;
 import employees.Employee;
 
 import java.sql.*;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import employees.Nurse;
 import employees.Receptionist;
@@ -46,14 +43,11 @@ public class AdministratorRepo extends CommonRepo {
             Connection connection = DBConfig.getDatabaseConnection();
 
             try {
-                DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-                java.util.Date date = format.parse(employee.getBirthday().toString());
-
                 PreparedStatement statement = connection.prepareStatement(query);
                 statement.setLong(1, employee.getID());
                 statement.setString(2, employee.getFirstName());
                 statement.setString(3, employee.getLastName());
-                statement.setDate(4, new java.sql.Date(date.getTime()));
+                statement.setDate(4, employee.getBirthday().toSQLDate());
                 statement.setString(5, String.valueOf(employee.getSex()));
                 statement.setInt(6, employee.getAge());
                 statement.setDouble(7, employee.getSalary());
@@ -72,8 +66,8 @@ public class AdministratorRepo extends CommonRepo {
                     statement.setInt(11, Receptionist.getHoursPerDay());
                 }
                 else {
-                    statement.setDouble(10, 0);
-                    statement.setInt(11, 0);
+                    statement.setDouble(10, Administrator.getSalaryPerHour());
+                    statement.setInt(11, Administrator.getHoursPerDay());
                 }
                 statement.setString(12, emp_type);
                 statement.execute();
@@ -89,7 +83,7 @@ public class AdministratorRepo extends CommonRepo {
                     statement1.execute();
                 }
 
-            } catch (SQLException | ParseException throwables) {
+            } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
         }
@@ -133,14 +127,11 @@ public class AdministratorRepo extends CommonRepo {
             Connection connection = DBConfig.getDatabaseConnection();
 
             try {
-                DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-                java.util.Date date = format.parse(equipment.getBuyDate().toString());
-
                 PreparedStatement statement = connection.prepareStatement(query);
                 statement.setLong(1, equipment.getID());
                 statement.setString(2, equipment.getName());
                 statement.setDouble(3, equipment.getPrice());
-                statement.setDate(4, new java.sql.Date(date.getTime()));
+                statement.setDate(4, equipment.getBuyDate().toSQLDate());
                 statement.setString(5, eq_type);
                 statement.execute();
 
@@ -168,9 +159,37 @@ public class AdministratorRepo extends CommonRepo {
                     statement.execute();
                 }
 
-            } catch (ParseException | SQLException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void updateEmployee(String criteria, String columnToUpdate, String newValue) {
+        String query = "UPDATE employees SET " + columnToUpdate + " = ? WHERE " + criteria;
+        Connection connection = DBConfig.getDatabaseConnection();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            if (columnToUpdate.equalsIgnoreCase("age") || columnToUpdate.equalsIgnoreCase("experience")
+                    || columnToUpdate.equalsIgnoreCase("days_worked")
+                    || columnToUpdate.equalsIgnoreCase("hours_per_day")) {
+
+                statement.setInt(1, Integer.parseInt(newValue));
+            }
+            else if (columnToUpdate.equalsIgnoreCase("salary") || columnToUpdate.equalsIgnoreCase("salary_per_hour")) {
+                statement.setDouble(1, Double.parseDouble(newValue));
+            }
+            else if (columnToUpdate.equalsIgnoreCase("id")) {
+                return;
+            }
+            else {
+                statement.setString(1, newValue);
+            }
+            statement.execute();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 
@@ -188,6 +207,56 @@ public class AdministratorRepo extends CommonRepo {
         }
     }
 
+    public void updateDoctor(long id, String spec) {
+        String query = "UPDATE doctor SET specialization = ? WHERE id = ?";
+        Connection connection = DBConfig.getDatabaseConnection();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, spec);
+            statement.setLong(2, id);
+            statement.execute();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void updateEquipment(String criteria, String columnToUpdate, String newValue) {
+        String query = "UPDATE equipment SET " + columnToUpdate + " = ? WHERE " + criteria;
+        Connection connection = DBConfig.getDatabaseConnection();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            if (columnToUpdate.equalsIgnoreCase("name") || columnToUpdate.equalsIgnoreCase("eq_type")) {
+                query = query.replace("?", newValue);
+                statement = connection.prepareStatement(query);
+            }
+            else if (columnToUpdate.equalsIgnoreCase("buy_date")) {
+                statement.setDate(1, (new utilities.Date(
+                    Integer.parseInt(newValue.split("[/-]")[0]),
+                    Integer.parseInt(newValue.split("[/-]")[1]),
+                    Integer.parseInt(newValue.split("[/-]")[2])).toSQLDate()
+                ));
+            }
+            else if (columnToUpdate.equalsIgnoreCase("price")) {
+                try {
+                    statement.setDouble(1, Double.parseDouble(newValue));
+                } catch (NumberFormatException e) {
+                    query = query.replace("?", newValue);
+                    statement = connection.prepareStatement(query);
+                }
+            }
+            else {
+                return;
+            }
+            statement.execute();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public void deleteEmployeeById(long id) {
         if (id == Administrator.getInstance().getID()) {
             return;
@@ -198,8 +267,13 @@ public class AdministratorRepo extends CommonRepo {
         try {
             Employee dbEmployee = selectEmployeeById(id);
             if (dbEmployee instanceof Doctor) {
-                String query = "DELETE FROM doctor WHERE id = ?";
+                String query = "DELETE FROM appointment WHERE doctor_id = ?";
                 PreparedStatement statement = connection.prepareStatement(query);
+                statement.setLong(1, id);
+                statement.execute();
+
+                query = "DELETE FROM doctor WHERE id = ?";
+                statement = connection.prepareStatement(query);
                 statement.setLong(1, id);
                 statement.execute();
             }

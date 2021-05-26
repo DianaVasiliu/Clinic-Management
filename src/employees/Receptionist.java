@@ -1,5 +1,6 @@
 package employees;
 
+import repositories.AdministratorRepo;
 import utilities.Date;
 import utilities.LoggingCSV;
 
@@ -28,6 +29,8 @@ public class Receptionist extends Employee {
             return;
         }
         this.experience = experience;
+
+        AdministratorRepo.getInstance().updateEmployee("id = " + this.getID(), "experience", Integer.toString(this.experience));
     }
 
     @Override

@@ -1,5 +1,8 @@
 package utilities;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -57,6 +60,21 @@ public class Date implements Comparable<Date> {
         } else {
             return 0;
         }
+    }
+
+    public java.util.Date toUtilDate() {
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            return format.parse(this.toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public java.sql.Date toSQLDate() {
+        java.util.Date utilDate = this.toUtilDate();
+        return new java.sql.Date(utilDate.getTime());
     }
 
     /* setters & getters */

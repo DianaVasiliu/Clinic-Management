@@ -4,11 +4,9 @@ import clinic.Clinic;
 import database.DBConfig;
 import patients.Appointment;
 import patients.Patient;
+import utilities.Date;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -56,19 +54,6 @@ public class ReceptionistRepo extends CommonRepo {
         }
     }
 
-    public void deletePatientById(long id) {
-        String query = "DELETE FROM patient WHERE id = ?";
-        Connection connection = DBConfig.getDatabaseConnection();
-
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setLong(1, id);
-            statement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void insertAppointment(Appointment appointment) {
         if (appointment != null) {
             Appointment dbAppointment = selectAppointmentById(appointment.getID());
@@ -107,10 +92,84 @@ public class ReceptionistRepo extends CommonRepo {
                     statement.setLong(4, patient.getID());
                     statement.execute();
 
+                    System.out.println("Appointment inserted");
+
                 } catch (SQLException | ParseException throwables) {
                     throwables.printStackTrace();
                 }
             }
+        }
+    }
+
+    public void updatePatient(String criteria, String columnToUpdate, String newValue) {
+        if (!criteria.equals("") && !columnToUpdate.equals("") && !newValue.equals("")) {
+            String query = "UPDATE patient SET " + columnToUpdate + " = ? WHERE " + criteria;
+            Connection connection = DBConfig.getDatabaseConnection();
+
+            try {
+                PreparedStatement statement = connection.prepareStatement(query);
+                if (criteria.equalsIgnoreCase("age") || criteria.equalsIgnoreCase("height")) {
+                    statement.setInt(1, Integer.parseInt(newValue));
+                }
+                else if (criteria.equalsIgnoreCase("weight") || criteria.equalsIgnoreCase("debt")) {
+                    statement.setDouble(1, Double.parseDouble(newValue));
+                }
+                else if (criteria.equalsIgnoreCase("id")) {
+                    System.err.println("Cannot update patient id");
+                    return;
+                }
+                else {
+                    statement.setString(1, newValue);
+                }
+                statement.execute();
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    public void updateAppointment(String criteria, String columnToUpdate, String newValue) {
+        String query = "UPDATE appointment SET " + columnToUpdate + " = ? WHERE " + criteria;
+        Connection connection = DBConfig.getDatabaseConnection();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            if (columnToUpdate.equalsIgnoreCase("doctor_id") || columnToUpdate.equalsIgnoreCase("patient_id")) {
+                statement.setLong(1, Long.parseLong(newValue));
+            }
+            else if (columnToUpdate.equalsIgnoreCase("id")) {
+                return;
+            }
+            else {
+                int day = Integer.parseInt(newValue.split("[/-]")[0]);
+                int month = Integer.parseInt(newValue.split("[/-]")[1]);
+                int year = Integer.parseInt(newValue.split("[/-]")[2].split(" ")[0]);
+                String time = newValue.split("[/-]")[2].split(" ")[1];
+
+                statement.setString(1, (new Date(day, month, year)).toSQLDate().toString() + " " + time);
+            }
+            statement.execute();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+
+    }
+
+    public void deletePatientById(long id) {
+        // TODO : either ON DELETE CASCADE or DELETE FROM appointment ...
+
+        String query = "DELETE FROM patient WHERE id = ?";
+        Connection connection = DBConfig.getDatabaseConnection();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setLong(1, id);
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -122,8 +181,11 @@ public class ReceptionistRepo extends CommonRepo {
             Statement statement = connection.createStatement();
             statement.execute(query);
 
+            System.out.println("Appointment deleted");
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
+
 }

@@ -1,6 +1,7 @@
 package patients;
 
 import patients.utils.cmpAppointmentDate;
+import repositories.ReceptionistRepo;
 
 import java.util.ArrayList;
 
@@ -64,6 +65,12 @@ public class Patient implements Comparable<Patient> {
         if (firstName != null) {
             if (firstName.matches("[A-Z][a-z]*")) {
                 this.firstName = firstName;
+
+                ReceptionistRepo.getInstance().updatePatient(
+                        "id = " + this.getID(),
+                        "first_name",
+                        this.firstName
+                );
             }
         }
     }
@@ -72,6 +79,11 @@ public class Patient implements Comparable<Patient> {
         if (lastName != null) {
             if (lastName.matches("[A-Z][A-Za-z]*")) {
                 this.lastName = lastName;
+                ReceptionistRepo.getInstance().updatePatient(
+                        "id = " + this.getID(),
+                        "last_name",
+                        this.lastName
+                );
             }
         }
     }
@@ -81,6 +93,11 @@ public class Patient implements Comparable<Patient> {
             String regex = "^(?!000|666)[0-8][0-9]{2}-(?!00)[0-9]{2}-(?!0000)[0-9]{4}$";
             if (SSN.matches(regex)) {
                 this.SSN = SSN;
+                ReceptionistRepo.getInstance().updatePatient(
+                        "id = " + this.getID(),
+                        "ssn",
+                        this.SSN
+                );
             }
         }
     }
@@ -88,6 +105,11 @@ public class Patient implements Comparable<Patient> {
     public void setAge(int age) {
         if (age >= 0 && age <= 110) {
             this.age = age;
+            ReceptionistRepo.getInstance().updatePatient(
+                    "id = " + this.getID(),
+                    "age",
+                    String.valueOf(this.age)
+            );
         }
     }
 
@@ -95,23 +117,43 @@ public class Patient implements Comparable<Patient> {
         sex = Character.toUpperCase(sex);
         if (sex == 'M' || sex == 'F') {
             this.sex = sex;
+            ReceptionistRepo.getInstance().updatePatient(
+                    "id = " + this.getID(),
+                    "sex",
+                    String.valueOf(this.sex)
+            );
         }
     }
 
     public void setHeight(int height) {
         if (height > 40) {
             this.height = height;
+            ReceptionistRepo.getInstance().updatePatient(
+                    "id = " + this.getID(),
+                    "height",
+                    String.valueOf(this.height)
+            );
         }
     }
 
     public void setWeight(double weight) {
         if (weight > 0.5) {
             this.weight = weight;
+            ReceptionistRepo.getInstance().updatePatient(
+                    "id = " + this.getID(),
+                    "weight",
+                    String.valueOf(this.weight)
+            );
         }
     }
 
     public void setDebt(double debt) {
         this.debt = debt;
+        ReceptionistRepo.getInstance().updatePatient(
+                "id = " + this.getID(),
+                "debt",
+                String.valueOf(this.debt)
+        );
     }
 
     public void setID(long ID) {
@@ -175,6 +217,7 @@ public class Patient implements Comparable<Patient> {
                 ", sex=" + sex +
                 ", height=" + height +
                 ", weight=" + weight +
+                ", debt=" + debt +
                 "}";
     }
 

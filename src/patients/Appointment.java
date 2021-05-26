@@ -16,6 +16,12 @@ public class Appointment {
         this.ID = ++noOfAppointments;
     }
 
+    public static void decreaseNoOfAppointments() {
+        if (noOfAppointments > 0) {
+            noOfAppointments--;
+        }
+    }
+
     public Appointment(Date date, String time, Doctor doctor) {
         this.date = new Date(date);
         this.time = time;
@@ -43,6 +49,12 @@ public class Appointment {
 
     public void setDoctor(Doctor doctor) {
         this.doctor = new Doctor(doctor);
+    }
+
+    public void setID(long id) {
+        if (id > 0) {
+            this.ID = id;
+        }
     }
 
     public Date getDate() {
